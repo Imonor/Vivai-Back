@@ -1,0 +1,11 @@
+[
+{"nom": ["Basilic"]},
+{"famille": ["Lamiac\u00e9es"]},
+{"entretien": ["\n\t\t\t\t\t\t\t\t\t\t\tMod\u00e9r\u00e9\n\t\t\t\t\t\t\t\t\t\t\t"]},
+{"besoinEau": ["\n\t\t\t\t\t\t\t\t\t\t\tMoyen\n\t\t\t\t\t\t\t\t\t\t\t"]},
+{"croissance": ["\n\t\t\t\t\t\t\t\t\t\t\t"]},
+{"resistanceFroid": ["\n\t\t\t\t\t\t\t\t\t\t\t\tFragile\n\t\t\t\t\t\t\t\t\t\t\t\t"]},
+{"exposition": ["\n\t\t\t\t\t\t\t\t\t\t\t\tSoleil\n\t\t\t\t\t\t\t\t\t\t\t\t"]},
+{"hauteurMaturite": ["\n\t\t\t\t\t\t\t\t\t\t\t\t0,15 \u00e0 1 m\n\t\t\t\t\t\t\t\t\t\t\t"]},
+{"largeurMaturite": ["\n\t\t\t\t\t\t\t\t\t\t\t\t0,10 \u00e0 0,70 m\n\t\t\t\t\t\t\t\t\t\t\t"]}
+]
