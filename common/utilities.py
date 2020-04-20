@@ -19,7 +19,8 @@ def handle_error(error):
     return generate_http_response(message)
 
 def get_parameters(event, required_parameters, optionnal_parameters):
-    """Returns a dict containing the parameters of the event, or raise an error if it doesn't work"""
+    """Returns a dict containing the parameters of the event,
+       or raise an error if it doesn't work"""
     parameters = event.get("queryStringParameters")
     if not parameters:
         raise MissingParameterException(required_parameters)
@@ -45,6 +46,7 @@ def get_parameters(event, required_parameters, optionnal_parameters):
 class MissingParameterException(Exception):
     """Exception raised when a required parameter is missing"""
     def __init__(self, missing_parameters):
+        super(MissingParameterException, self).__init__()
         self.missing_parameters = missing_parameters
         if len(missing_parameters) == 1:
             self.message = "Parameter " + missing_parameters[0] + " is missing."
