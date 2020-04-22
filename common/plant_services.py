@@ -48,6 +48,35 @@ def insert_plant_user(event, context):
         db_dealer.commit_transaction(transaction_id)
 
         return utilities.generate_http_response({"message": "Success"})
+    except (ClientError, utilities.MissingParameterException) as error:
+        return utilities.handle_error(error)
+
+def get_list_plants_user(event, context):
+    "Insert plant for the specified user into the database"
+    try:
+        parameters = utilities.get_parameters(event, [PARAM_USER_ID], [])
+
+        user_id = parameters[PARAM_USER_ID]
+
+        sql_statement = f'SELECT * FROM {db_dealer.DATABASE}.{db_dealer.USER_PLANT_TABLE} \
+                          WHERE userID = "{user_id}"'
+
+        response = db_dealer.execute_statement(sql_statement)
+
+        plants = []
+        for record in response['records']:
+            plant = {
+                "id": record[0]["longValue"],
+                "userId": record[1]["stringValue"],
+                "plantId": record[2]["longValue"],
+                "location": record[3]["stringValue"],
+                "temperature": record[4]["doubleValue"],
+                "sunExpo": record[5]["stringValue"],
+                "shared": record[6]["booleanValue"]
+            }
+            plants.append(plant)
+
+        return utilities.generate_http_response(plants)
 
     except (ClientError, utilities.MissingParameterException) as error:
         return utilities.handle_error(error)
