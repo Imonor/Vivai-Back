@@ -42,3 +42,4 @@ CREATE TABLE Vivai.Reporting(
   CONSTRAINT pk_reporting_userplantid_reportdate PRIMARY KEY(userPlantId, reportDate),
   CONSTRAINT fk_reporting_userplantid FOREIGN KEY(userPlantId) REFERENCES Vivai.UserPlant(id)
 );
+

@@ -7,8 +7,9 @@ from botocore.exceptions import ClientError
 RDS_DATA_CLIENT = boto3.client('rds-data', 'eu-west-1')
 DATABASE = "Vivai"
 
-# Tables' Name
+# Table's Name
 SUPPORTED_PLANT_TABLE = "SupportedPlant"
+USER_PLANT_TABLE = "UserPlant"
 
 RESOURCE_ARN = os.getenv("RESOURCE_ARN")
 SECRET_ARN = os.getenv("SECRET_ARN")
