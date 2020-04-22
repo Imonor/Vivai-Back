@@ -15,22 +15,23 @@ PARAM_PLANT_SHARED = "shared"
 def insert_plant_user(event, context):
     "Insert plant for the specified user into the database"
     try:
-        parameters = utilities.get_parameters(event, [PARAM_USER_ID, PARAM_PLANT_ID], 
-                                                     [PARAM_PLANT_LOCATION, PARAM_PLANT_TEMP, 
-                                                      PARAM_PLANT_SUNEXPO, PARAM_PLANT_SHARED])
+        parameters = utilities.get_parameters(event, [PARAM_USER_ID, PARAM_PLANT_ID],
+                                              [PARAM_PLANT_LOCATION, PARAM_PLANT_TEMP,
+                                               PARAM_PLANT_SUNEXPO, PARAM_PLANT_SHARED])
         user_id = parameters[PARAM_USER_ID]
         plant_id = parameters[PARAM_PLANT_ID]
 
-        sql_start = f'INSERT INTO {db_dealer.DATABASE}.{db_dealer.USER_PLANT_TABLE} (userId, plantId' 
-        sql_end = f'VALUES ({user_id}, {plant_id}'
+        sql_start = f'INSERT INTO {db_dealer.DATABASE}.{db_dealer.USER_PLANT_TABLE} \
+                      (userId, plantId'
+        sql_end = f'VALUES ("{user_id}", {plant_id}'
 
         if parameters[PARAM_PLANT_LOCATION]:
             sql_start += f', {PARAM_PLANT_LOCATION}'
             sql_end += f', "{parameters[PARAM_PLANT_LOCATION]}"'
-        
+
         if parameters[PARAM_PLANT_TEMP]:
             sql_start += f', {PARAM_PLANT_TEMP}'
-            sql_end += f', "{parameters[PARAM_PLANT_TEMP]}"'
+            sql_end += f', {parameters[PARAM_PLANT_TEMP]}'
 
         if parameters[PARAM_PLANT_SUNEXPO]:
             sql_start += f', {PARAM_PLANT_SUNEXPO}'
@@ -38,7 +39,7 @@ def insert_plant_user(event, context):
 
         if parameters[PARAM_PLANT_SHARED]:
             sql_start += f', {PARAM_PLANT_SHARED}'
-            sql_end += f', "{parameters[PARAM_PLANT_SHARED]}"'
+            sql_end += f', {parameters[PARAM_PLANT_SHARED]}'
 
         sql_statement = sql_start + ') ' + sql_end + ');'
 
@@ -49,5 +50,4 @@ def insert_plant_user(event, context):
         return utilities.generate_http_response({"message": "Success"})
 
     except (ClientError, utilities.MissingParameterException) as error:
-        return (utilities.handle_error(error))
-
+        return utilities.handle_error(error)

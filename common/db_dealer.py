@@ -20,7 +20,7 @@ def begin_transaction():
         transaction = RDS_DATA_CLIENT.begin_transaction(database=DATABASE,
                                                         resourceArn=RESOURCE_ARN,
                                                         secretArn=SECRET_ARN)
-        return transaction["transactoinId"]
+        return transaction["transactionId"]
     except ClientError as error:
         raise error
 
