@@ -11,4 +11,6 @@ Example: to invoke the function named hello: `GET https://BASEURL/app/hello`
 | Name              | Type | Description                            | URL             | Parameters         | Example response                                                                                                                      |
 |-------------------|------|----------------------------------------|-----------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------|
 | hello             | GET  | Says hello                             | app/hello       | null               | {"message": "Hello world !"} |
+| getSupportedPlants | GET  | Returns the list of supported plants matching the search, if given, else returns all supported plants | app/supportedplants | search: the searched plant (**OPTIONNAL**) | [{"species": "Basilic", "websiteUrl": "http://basilic.fr"}, {...}] |
+
 
