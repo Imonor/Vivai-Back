@@ -2,6 +2,8 @@
 import flask
 from flask import Flask
 
+import common.supported_plant as supported_plant
+
 APP = Flask(__name__)
 APP.debug = True
 
@@ -23,3 +25,9 @@ def after_request_func(response):
 def hello():
     """Says hello"""
     return {"message": "Hello World!"}
+
+@APP.route("/app/supportedplants", methods=["GET"])
+def get_supported_plants():
+    """Returns the list of supported plants"""
+    env = get_lambda_event_and_context()
+    return supported_plant.get_supported_plants(env["event"], env["context"])
