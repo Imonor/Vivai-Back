@@ -67,11 +67,11 @@ def get_list_plants_user(event, context):
         for record in response['records']:
             plant = {
                 "id": record[0]["longValue"],
-                "userId": record[1]["stringValue"],
-                "plantId": record[2]["longValue"],
-                "location": record[3]["stringValue"],
-                "temperature": record[4]["doubleValue"],
-                "sunExpo": record[5]["stringValue"],
+                "plantId": record[1]["longValue"],
+                "userId": record[2]["stringValue"],
+                "location": "NULL" if "isNull" in record[3].keys() else record[3]["stringValue"],
+                "temperature": "NULL" if "isNull" in record[4].keys() else record[4]["doubleValue"],
+                "sunExpo": "NULL" if "isNull" in record[5].keys() else record[5]["stringValue"],
                 "shared": record[6]["booleanValue"]
             }
             plants.append(plant)
