@@ -44,3 +44,11 @@ def get_list_plants_user():
     """Returns all plants for the user"""
     env = get_lambda_event_and_context()
     return plant_services.get_list_plants_user(env["event"], env["context"])
+
+@APP.route("/app/getPlantId", methods=["GET"])
+def getPlantId():
+    """Checks if supported species has completed infos :
+        if not : complete the plant infos by web scrapping and returns the plant id
+        else : returns the plant id"""
+    env = get_lambda_event_and_context()
+    return supported_plants.get_plant_id(env["event"], env["context"])
