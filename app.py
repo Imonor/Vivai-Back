@@ -3,6 +3,7 @@ import flask
 from flask import Flask
 
 import common.supported_plant as supported_plant
+import common.plant_services as plant_services
 
 APP = Flask(__name__)
 APP.debug = True
@@ -31,3 +32,9 @@ def get_supported_plants():
     """Returns the list of supported plants"""
     env = get_lambda_event_and_context()
     return supported_plant.get_supported_plants(env["event"], env["context"])
+
+@APP.route("/app/insertPlant", methods=["PUT"])
+def insertPlant():
+    """Insert the plant for linked user"""
+    env = get_lambda_event_and_context()
+    return plant_services.insert_plant_user(env["event"], env["context"])
