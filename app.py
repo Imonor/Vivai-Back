@@ -38,3 +38,9 @@ def insertPlant():
     """Insert the plant for linked user"""
     env = get_lambda_event_and_context()
     return plant_services.insert_plant_user(env["event"], env["context"])
+    
+@APP.route("/app/getListPlants", methods=["GET"])
+def get_list_plants_user():
+    """Returns all plants for the user"""
+    env = get_lambda_event_and_context()
+    return plant_services.get_list_plants_user(env["event"], env["context"])
