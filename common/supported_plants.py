@@ -8,24 +8,6 @@ PARAM_SEARCH = "search"
 PARAM_SPECIES = "species"
 
 def get_plant_id(event, context):
-    """Checks if supported species has completed infos :
-        if not : complete the plant infos by web scrapping and returns the plant id
-        else : returns the plant id"""
-    try:
-        parameters = utilities.get_parameters(event, [PARAM_SPECIES], [])
-        species = parameters[PARAM_SPECIES]
-
-        sql_statement = f'SELECT plantId FROM {db_dealer.DATABASE}.{db_dealer.PLANT_TABLE} \
-            WHERE species = "{species}";'
-
-        response = db_dealer.execute_statement(sql_statement)
-
-        return utilities.generate_http_response(response)
-        
-    except ClientError as error:
-        return utilities.handle_error(error)
-
-def get_plant_id(event, context):
     """Checks if supported species as completed infos :
         if not : complete the plant infos by web scrapping and returns the plant id
         else : returns the plant id"""
@@ -37,12 +19,17 @@ def get_plant_id(event, context):
             WHERE species = "{species}";'
 
         response = db_dealer.execute_statement(sql_statement)
-
-        return utilities.generate_http_response(response)
+        
+        # Espèce de plante non renseignée dans la table informative
+        if (len(response["records"]) == 0):
+            # Code pour le web-scrapping
+            return utilities.generate_http_response({"Résultat": "Plante non présente, web-scrapping nécéssaire"})
+        # Espèce déjà renseignée dans la table informative
+        else:
+            return utilities.generate_http_response({"plantId": response["records"][0][0]["longValue"]})
         
     except ClientError as error:
         return utilities.handle_error(error)
-
 
 def get_supported_plants(event, context):
     """Returns the list of the supported plants"""
