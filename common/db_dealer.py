@@ -10,6 +10,7 @@ DATABASE = "Vivai"
 # Table's Name
 SUPPORTED_PLANT_TABLE = "SupportedPlant"
 USER_PLANT_TABLE = "UserPlant"
+PLANT_TABLE = "Plant"
 
 RESOURCE_ARN = os.getenv("RESOURCE_ARN")
 SECRET_ARN = os.getenv("SECRET_ARN")
