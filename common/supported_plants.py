@@ -9,7 +9,7 @@ PARAM_SPECIES = "species"
 
 def get_plant_id(event, context):
     """Checks if supported species as completed infos :
-        if not : complete the plant infos by web scrapping and returns the plant id
+        if not : complete the plant infos by web scrapping method and returns the plant id
         else : returns the plant id"""
     try:
         parameters = utilities.get_parameters(event, [PARAM_SPECIES], [])
@@ -19,7 +19,7 @@ def get_plant_id(event, context):
             WHERE species = "{species}";'
 
         response = db_dealer.execute_statement(sql_statement)
-        
+
         # Espèce de plante non renseignée dans la table informative
         if (len(response["records"]) == 0):
             # Code pour le web-scrapping
