@@ -2,7 +2,7 @@
 import flask
 from flask import Flask
 
-import common.supported_plant as supported_plant
+import common.supported_plants as supported_plants
 import common.plant_services as plant_services
 
 APP = Flask(__name__)
@@ -27,11 +27,11 @@ def hello():
     """Says hello"""
     return {"message": "Hello World!"}
 
-@APP.route("/app/supportedplants", methods=["GET"])
+@APP.route("/app/getSupportedPlants", methods=["GET"])
 def get_supported_plants():
     """Returns the list of supported plants"""
     env = get_lambda_event_and_context()
-    return supported_plant.get_supported_plants(env["event"], env["context"])
+    return supported_plants.get_supported_plants(env["event"], env["context"])
 
 @APP.route("/app/insertPlant", methods=["PUT"])
 def insertPlant():
@@ -44,3 +44,11 @@ def get_list_plants_user():
     """Returns all plants for the user"""
     env = get_lambda_event_and_context()
     return plant_services.get_list_plants_user(env["event"], env["context"])
+
+@APP.route("/app/getPlantId", methods=["GET"])
+def getPlantId():
+    """Checks if supported species has completed infos :
+        if not : complete the plant infos by web scrapping and returns the plant id
+        else : returns the plant id"""
+    env = get_lambda_event_and_context()
+    return supported_plants.get_plant_id(env["event"], env["context"])

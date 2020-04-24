@@ -9,6 +9,7 @@ DATABASE = "Vivai"
 
 # Table's Name
 SUPPORTED_PLANT_TABLE = "SupportedPlant"
+PLANT_TABLE = "Plant"
 USER_PLANT_TABLE = "UserPlant"
 PLANT_TABLE = "Plant"
 
