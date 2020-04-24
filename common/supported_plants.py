@@ -25,14 +25,14 @@ def get_plant_id(event, context):
         if (len(response["records"]) == 0):
             # Code pour le web-scrapping
 
-            # Attributs retournés
+            # Attributs retournés par défaut pour l'instant
             attributes = {
-                "species": "thym",
+                "species": "WebScrapper",
                 "family": "aromates",
-                "picUrl": "thym.png",
+                "picUrl": "WebScrapper.png",
                 "waterNeed": "faible" ,
                 "careLevel": "facile",
-                "Growth": "janvier",
+                "growth": "janvier",
                 "coldResistance": "fragile",
                 "sunNeed": "ombre",
                 "heightMature": 30,
@@ -43,6 +43,7 @@ def get_plant_id(event, context):
 
             return utilities.generate_http_response({"Résultat": "Plante non présente, web-scrapping nécéssaire. \
                 Insertion d'une plante par défaut"})
+
         # Espèce déjà renseignée dans la table informative
         else:
             return utilities.generate_http_response({"plantId": response["records"][0][0]["longValue"]})
