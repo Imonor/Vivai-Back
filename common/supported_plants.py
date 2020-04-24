@@ -25,8 +25,7 @@ def get_plant_id(event, context):
         if (len(response["records"]) == 0):
             # Code pour le web-scrapping
 
-            # Attributs retournés par défaut pour l'instant
-            species = parameters[PARAM_SPECIES]
+            # Exemple d'attributs retournés par le web-scrapping
             attributes = {
                 "species": species,
                 "family": "aromates",
@@ -40,10 +39,12 @@ def get_plant_id(event, context):
                 "widthMature": 20
             }
 
-            res_add = plant_services.add_plant(attributes)
+            # res_add = plant_services.add_plant(attributes)
+            # return utilities.generate_http_response({"plantId": res_add["generatedFields"][0]["longValue"]})
 
-            return utilities.generate_http_response({"infos" : "(Données de l'espèce générées aléatoirement \
-            et sans web-scrapping) ", "plantId": res_add["generatedFields"][0]["longValue"]})
+            return utilities.generate_http_response({"Message" : "Web-scrapping nécéssaire"})
+
+
 
         # Espèce déjà renseignée dans la table informative
         else:
