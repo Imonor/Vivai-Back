@@ -42,8 +42,8 @@ def get_plant_id(event, context):
 
             res_add = plant_services.add_plant(attributes)
 
-            return utilities.generate_http_response({"plantId (Données de l'espèce générées aléatoirement \
-            et sans web-scrapping)" : res_add["generatedFields"][0]["longValue"]})
+            return utilities.generate_http_response({"infos" : "(Données de l'espèce générées aléatoirement \
+            et sans web-scrapping) ", "plantId": res_add["generatedFields"][0]["longValue"]})
 
         # Espèce déjà renseignée dans la table informative
         else:
