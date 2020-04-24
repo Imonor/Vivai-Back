@@ -95,7 +95,7 @@ def get_list_plants_user(event, context):
 
 def add_plant(attributes):
     """ Adds a new plant in the Plant table ; 
-        Returns true in case of success, raises an error otherwise"""
+        Returns the request response in case of success, raises an error otherwise"""
 
     try:
         sql_statement = f'INSERT INTO {db_dealer.DATABASE}.{db_dealer.PLANT_TABLE}({PARAM_SPECIES}, \
@@ -117,10 +117,10 @@ def add_plant(attributes):
         sql_statement += f');'
 
         transaction_id = db_dealer.begin_transaction()
-        db_dealer.execute_statement_with_id(sql_statement, transaction_id)
+        res_add = db_dealer.execute_statement_with_id(sql_statement, transaction_id)
         db_dealer.commit_transaction(transaction_id)
 
-        return True
+        return res_add
 
     except ClientError as error:
         raise error

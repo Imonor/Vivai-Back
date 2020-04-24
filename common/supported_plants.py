@@ -39,10 +39,10 @@ def get_plant_id(event, context):
                 "widthMature": 20
             }
 
-            plant_services.add_plant(attributes)
+            res_add = plant_services.add_plant(attributes)
 
-            return utilities.generate_http_response({"Résultat": "Plante non présente, web-scrapping nécéssaire. \
-                Insertion d'une plante par défaut"})
+            return utilities.generate_http_response({"plantId (Données de l'espèce générées aléatoirement \
+            et sans web-scrapping)" : res_add["generatedFields"][0]["longValue"]})
 
         # Espèce déjà renseignée dans la table informative
         else:
