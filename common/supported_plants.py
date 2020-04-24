@@ -15,7 +15,7 @@ def get_plant_id(event, context):
         parameters = utilities.get_parameters(event, [PARAM_SPECIES], [])
         species = parameters[PARAM_SPECIES]
 
-        sql_statement = f'SELECT plantId FROM {db_dealer.DATABASE}.{db_dealer.PLANT_TABLE} \
+        sql_statement = f'SELECT id FROM {db_dealer.DATABASE}.{db_dealer.PLANT_TABLE} \
             WHERE species = "{species}";'
 
         response = db_dealer.execute_statement(sql_statement)
@@ -23,6 +23,7 @@ def get_plant_id(event, context):
         # Espèce de plante non renseignée dans la table informative
         if (len(response["records"]) == 0):
             # Code pour le web-scrapping
+
             return utilities.generate_http_response({"Résultat": "Plante non présente, web-scrapping nécéssaire"})
         # Espèce déjà renseignée dans la table informative
         else:

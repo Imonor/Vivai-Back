@@ -27,7 +27,7 @@ def hello():
     """Says hello"""
     return {"message": "Hello World!"}
 
-@APP.route("/app/supportedplants", methods=["GET"])
+@APP.route("/app/getSupportedPlants", methods=["GET"])
 def get_supported_plants():
     """Returns the list of supported plants"""
     env = get_lambda_event_and_context()
