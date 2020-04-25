@@ -8,14 +8,12 @@ import common.plant_services as plant_services
 PARAM_SEARCH = "search"
 PARAM_SPECIES = "species"
 
-def get_plant_id(event, context):
-    """Checks if supported species as completed infos :
-        if not : complete the plant infos by web scrapping method and returns the plant id
-        else : returns the plant id"""
+def get_plant_id(species):
+    """Checks if species parameter has completed infos in Plant table.
+    If not it completes the plant infos by web-scrapping method and returns the plant ID.
+    Else it returns the plant ID without web-scrapping"""
+    
     try:
-        parameters = utilities.get_parameters(event, [PARAM_SPECIES], [])
-        species = parameters[PARAM_SPECIES]
-
         sql_statement = f'SELECT id FROM {db_dealer.DATABASE}.{db_dealer.PLANT_TABLE} \
             WHERE species = "{species}";'
 
@@ -43,8 +41,6 @@ def get_plant_id(event, context):
             # return utilities.generate_http_response({"plantId": res_add["generatedFields"][0]["longValue"]})
 
             return utilities.generate_http_response({"Message" : "Web-scrapping nécéssaire"})
-
-
 
         # Espèce déjà renseignée dans la table informative
         else:
