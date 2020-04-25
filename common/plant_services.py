@@ -26,6 +26,28 @@ PARAM_SUN_NEED = "sunNeed"
 PARAM_HEIGHT_MATURE = "heightMature"
 PARAM_WIDTH_MATURE = "widthMature"
 
+PARAM_USER_PLANT_ID = "userPlantId"
+
+def delete_user_plant(event, context):
+    "Delete plant at the specified user plant ID"
+
+    try:
+        parameters = utilities.get_parameters(event, [PARAM_USER_PLANT_ID], [])
+        user_plant_id = parameters[PARAM_USER_PLANT_ID]
+
+        sql_statement = f'DELETE FROM {db_dealer.DATABASE}.{db_dealer.USER_PLANT_TABLE} \
+            WHERE id = {user_plant_id};'
+
+        transaction_id = db_dealer.begin_transaction()
+        db_dealer.execute_statement_with_id(sql_statement, transaction_id)
+        db_dealer.commit_transaction(transaction_id)
+
+        return utilities.generate_http_response({"Message": "Successfully deleted"})
+
+    except (ClientError, utilities.MissingParameterException) as error:
+        return utilities.handle_error(error)
+
+
 def insert_plant_user(event, context):
     "Insert plant for the specified user into the database"
     try:
@@ -36,6 +58,7 @@ def insert_plant_user(event, context):
         species = parameters[PARAM_SPECIES]
 
         res = supported_plants.get_plant_id(species)
+
         
         if ("plantId" in res.keys()):
             plant_id = res["plantId"]
