@@ -45,3 +45,8 @@ def get_list_plants_user():
     env = get_lambda_event_and_context()
     return plant_services.get_list_plants_user(env["event"], env["context"])
 
+@APP.route("/app/deletePlant", methods=["PUT"])
+def delete__user_plant():
+    """Deletes the plant for the user"""
+    env = get_lambda_event_and_context()
+    return plant_services.delete_user_plant(env["event"], env["context"])
