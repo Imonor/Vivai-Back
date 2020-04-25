@@ -69,8 +69,10 @@ def get_list_plants_user(event, context):
 
         user_id = parameters[PARAM_USER_ID]
 
-        sql_statement = f'SELECT * FROM {db_dealer.DATABASE}.{db_dealer.USER_PLANT_TABLE} \
-                          WHERE userID = "{user_id}"'
+        sql_statement = f'SELECT uplant.id, plantId, userId, nickname, location, temperature, sunExpo, shared, plant.picUrl \
+                          FROM {db_dealer.DATABASE}.{db_dealer.USER_PLANT_TABLE} as uplant JOIN \
+                          {db_dealer.DATABASE}.{db_dealer.PLANT_TABLE} as plant ON uplant.plantId = plant.id \
+                          WHERE uplant.userID = "{user_id}"'
 
         response = db_dealer.execute_statement(sql_statement)
 
@@ -80,10 +82,12 @@ def get_list_plants_user(event, context):
                 "id": record[0]["longValue"],
                 "plantId": record[1]["longValue"],
                 "userId": record[2]["stringValue"],
-                "location": "NULL" if "isNull" in record[3].keys() else record[3]["stringValue"],
-                "temperature": "NULL" if "isNull" in record[4].keys() else record[4]["doubleValue"],
-                "sunExpo": "NULL" if "isNull" in record[5].keys() else record[5]["stringValue"],
-                "shared": record[6]["booleanValue"]
+                "nickname": "NULL" if "isNull" in record[3] else record[3]["stringValue"],
+                "location": "NULL" if "isNull" in record[4] else record[4]["stringValue"],
+                "temperature": "NULL" if "isNull" in record[5] else record[5]["stringValue"],
+                "sunExpo": "NULL" if "isNull" in record[6] else record[6]["stringValue"],
+                "shared": record[7]["booleanValue"],
+                "picUrl": record[8]["stringValue"]
             }
             plants.append(plant)
 
