@@ -34,36 +34,47 @@ def insert_plant_user(event, context):
         user_id = parameters[PARAM_USER_ID]
         species = parameters[PARAM_SPECIES]
 
-        res_add = supported_plants.get_plant_id(species)
-        plant_id = res_add["plantId"]
+        res = supported_plants.get_plant_id(species)
+        
+        if ("plantId" in res.keys()):
+            plant_id = res["plantId"]
+            
+            sql_start = f'INSERT INTO {db_dealer.DATABASE}.{db_dealer.USER_PLANT_TABLE} \
+                          (userId, plantId'
+            sql_end = f'VALUES ("{user_id}", {plant_id}'
+    
+            if parameters[PARAM_PLANT_LOCATION]:
+                sql_start += f', {PARAM_PLANT_LOCATION}'
+                sql_end += f', "{parameters[PARAM_PLANT_LOCATION]}"'
+    
+            if parameters[PARAM_PLANT_TEMP]:
+                sql_start += f', {PARAM_PLANT_TEMP}'
+                sql_end += f', {parameters[PARAM_PLANT_TEMP]}'
+    
+            if parameters[PARAM_PLANT_SUNEXPO]:
+                sql_start += f', {PARAM_PLANT_SUNEXPO}'
+                sql_end += f', "{parameters[PARAM_PLANT_SUNEXPO]}"'
+    
+            if parameters[PARAM_PLANT_SHARED]:
+                sql_start += f', {PARAM_PLANT_SHARED}'
+                sql_end += f', {parameters[PARAM_PLANT_SHARED]}'
+    
+            sql_statement = sql_start + ') ' + sql_end + ');'
+    
+            transaction_id = db_dealer.begin_transaction()
+            ins = db_dealer.execute_statement_with_id(sql_statement, transaction_id)
+            db_dealer.commit_transaction(transaction_id)
 
-        sql_start = f'INSERT INTO {db_dealer.DATABASE}.{db_dealer.USER_PLANT_TABLE} \
-                      (userId, plantId'
-        sql_end = f'VALUES ("{user_id}", {plant_id}'
-
-        if parameters[PARAM_PLANT_LOCATION]:
-            sql_start += f', {PARAM_PLANT_LOCATION}'
-            sql_end += f', "{parameters[PARAM_PLANT_LOCATION]}"'
-
-        if parameters[PARAM_PLANT_TEMP]:
-            sql_start += f', {PARAM_PLANT_TEMP}'
-            sql_end += f', {parameters[PARAM_PLANT_TEMP]}'
-
-        if parameters[PARAM_PLANT_SUNEXPO]:
-            sql_start += f', {PARAM_PLANT_SUNEXPO}'
-            sql_end += f', "{parameters[PARAM_PLANT_SUNEXPO]}"'
-
-        if parameters[PARAM_PLANT_SHARED]:
-            sql_start += f', {PARAM_PLANT_SHARED}'
-            sql_end += f', {parameters[PARAM_PLANT_SHARED]}'
-
-        sql_statement = sql_start + ') ' + sql_end + ');'
-
-        transaction_id = db_dealer.begin_transaction()
-        response = db_dealer.execute_statement_with_id(sql_statement, transaction_id)
-        db_dealer.commit_transaction(transaction_id)
-
-        return utilities.generate_http_response({"userPlantId": response["records"][0][0]["longValue"], "infos": response})
+            response = {
+                "userPlantId": ins["generatedFields"][0]["longValue"],
+                "userId": parameters[PARAM_USER_ID],
+                "plantId": plant_id
+            }
+    
+            return utilities.generate_http_response(response)
+        else:
+            return utilities.generate_http_response(res)
+        
     except (ClientError, utilities.MissingParameterException) as error:
         return utilities.handle_error(error)
 
