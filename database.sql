@@ -24,8 +24,9 @@ CREATE TABLE Vivai.UserPlant(
   id INT PRIMARY KEY AUTO_INCREMENT,
   plantId INT NOT NULL,
   userId VARCHAR(100) NOT NULL,
+  nickname VARCHAR(100),
   location VARCHAR(100),
-  temperature FLOAT,
+  temperature VARCHAR(100),
   sunExpo Enum("1", "2", "3"),
   shared BOOLEAN DEFAULT FALSE,
   CONSTRAINT fk_userplant_plantid FOREIGN KEY(plantId) REFERENCES Vivai.Plant(id)
