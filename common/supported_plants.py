@@ -20,7 +20,7 @@ def get_plant_id(species):
         response = db_dealer.execute_statement(sql_statement)
 
         # Espèce de plante non renseignée dans la table informative
-        if (len(response["records"]) == 0):
+        if not response["records"]:
             # Code pour le web-scrapping
             
             # Ajout de la plante dans la table informative et retour de son ID.
