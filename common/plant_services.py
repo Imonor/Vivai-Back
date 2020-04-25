@@ -28,8 +28,12 @@ PARAM_WIDTH_MATURE = "widthMature"
 
 PARAM_USER_PLANT_ID = "userPlantId"
 
+def update_plant_service(event, context):
+    "Updates plant at the specified user plant ID"
+
+
 def delete_user_plant(event, context):
-    "Delete plant at the specified user plant ID"
+    "Deletes plant at the specified user plant ID"
 
     try:
         parameters = utilities.get_parameters(event, [PARAM_USER_PLANT_ID], [])
