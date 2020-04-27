@@ -1,6 +1,7 @@
 """Main file for Rest API"""
 import flask
 from flask import Flask
+from flask import make_response
 
 import common.supported_plants as supported_plants
 import common.plant_services as plant_services
@@ -31,22 +32,26 @@ def hello():
 def get_supported_plants():
     """Returns the list of supported plants"""
     env = get_lambda_event_and_context()
-    return supported_plants.get_supported_plants(env["event"], env["context"])
+    body, status = supported_plants.get_supported_plants(env["event"], env["context"])
+    return make_response(body, status)
 
 @APP.route("/app/insertPlant", methods=["PUT"])
 def insertPlant():
     """Insert the plant for linked user"""
     env = get_lambda_event_and_context()
-    return plant_services.insert_plant_user(env["event"], env["context"])
+    body, status = plant_services.insert_plant_user(env["event"], env["context"])
+    return make_response(body, status)
     
 @APP.route("/app/getListPlants", methods=["GET"])
 def get_list_plants_user():
     """Returns all plants for the user"""
     env = get_lambda_event_and_context()
-    return plant_services.get_list_plants_user(env["event"], env["context"])
+    body, status = plant_services.get_list_plants_user(env["event"], env["context"])
+    return make_response(body, status)
 
 @APP.route("/app/deletePlant", methods=["PUT"])
 def delete_user_plant():
     """Deletes the plant for the user"""
     env = get_lambda_event_and_context()
-    return plant_services.delete_user_plant(env["event"], env["context"])
+    body, status = plant_services.delete_user_plant(env["event"], env["context"])
+    return make_response(body, status)

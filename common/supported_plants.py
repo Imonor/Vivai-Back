@@ -3,7 +3,6 @@
 from botocore.exceptions import ClientError
 import common.db_dealer as db_dealer
 import common.utilities as utilities
-import common.plant_services as plant_services
 
 PARAM_SEARCH = "search"
 PARAM_SPECIES = "species"
@@ -31,8 +30,8 @@ def get_plant_id(species):
             return {"Message" : "Web-scrapping nécéssaire"}
 
         # Espèce déjà renseignée dans la table informative
-        else:
-            return {"plantId": response["records"][0][0]["longValue"]}
+        
+        return {"plantId": response["records"][0][0]["longValue"]}
         
     except ClientError as error:
         return utilities.handle_error(error)
@@ -61,7 +60,7 @@ def get_supported_plants(event, context):
             }
             supported_plants.append(plant)
 
-        return utilities.generate_http_response(supported_plants)
+        return utilities.generate_http_response(supported_plants), 200
 
     except ClientError as error:
         return utilities.handle_error(error)
