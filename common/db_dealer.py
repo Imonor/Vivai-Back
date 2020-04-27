@@ -7,8 +7,11 @@ from botocore.exceptions import ClientError
 RDS_DATA_CLIENT = boto3.client('rds-data', 'eu-west-1')
 DATABASE = "Vivai"
 
-# Tables' Name
-PLANT_LIST_TABLE = "PlantList"
+# Table's Name
+SUPPORTED_PLANT_TABLE = "SupportedPlant"
+PLANT_TABLE = "Plant"
+USER_PLANT_TABLE = "UserPlant"
+PLANT_TABLE = "Plant"
 
 RESOURCE_ARN = os.getenv("RESOURCE_ARN")
 SECRET_ARN = os.getenv("SECRET_ARN")
@@ -19,7 +22,7 @@ def begin_transaction():
         transaction = RDS_DATA_CLIENT.begin_transaction(database=DATABASE,
                                                         resourceArn=RESOURCE_ARN,
                                                         secretArn=SECRET_ARN)
-        return transaction["transactoinId"]
+        return transaction["transactionId"]
     except ClientError as error:
         raise error
 
