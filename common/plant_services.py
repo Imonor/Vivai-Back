@@ -42,7 +42,7 @@ def delete_user_plant(event, context):
         db_dealer.execute_statement_with_id(sql_statement, transaction_id)
         db_dealer.commit_transaction(transaction_id)
 
-        return utilities.generate_http_response({"Message": "Successfully deleted"})
+        return utilities.generate_http_response({"Message": "Successfully deleted"}), 200
 
     except (ClientError, utilities.MissingParameterException) as error:
         return utilities.handle_error(error)
@@ -60,7 +60,7 @@ def insert_plant_user(event, context):
         res = supported_plants.get_plant_id(species)
 
         
-        if ("plantId" in res.keys()):
+        if "plantId" in res:
             plant_id = res["plantId"]
             
             sql_start = f'INSERT INTO {db_dealer.DATABASE}.{db_dealer.USER_PLANT_TABLE} \
@@ -99,9 +99,9 @@ def insert_plant_user(event, context):
                 "plantId": plant_id
             }
     
-            return utilities.generate_http_response(response)
-        else:
-            return utilities.generate_http_response(res)
+            return utilities.generate_http_response(response), 200
+        
+        return utilities.generate_http_response(res), 501
         
     except (ClientError, utilities.MissingParameterException) as error:
         return utilities.handle_error(error)
@@ -135,7 +135,7 @@ def get_list_plants_user(event, context):
             }
             plants.append(plant)
 
-        return utilities.generate_http_response(plants)
+        return utilities.generate_http_response(plants), 200
 
     except (ClientError, utilities.MissingParameterException) as error:
         return utilities.handle_error(error)
