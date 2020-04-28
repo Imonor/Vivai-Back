@@ -35,11 +35,11 @@ def get_supported_plants():
     body, status = supported_plants.get_supported_plants(env["event"], env["context"])
     return make_response(body, status)
 
-@APP.route("/app/insertPlant", methods=["PUT"])
+@APP.route("/app/insertUserPlant", methods=["PUT"])
 def insertPlant():
     """Insert the plant for linked user"""
     env = get_lambda_event_and_context()
-    body, status = plant_services.insert_plant_user(env["event"], env["context"])
+    body, status = plant_services.insert_user_plant(env["event"], env["context"])
     return make_response(body, status)
     
 @APP.route("/app/getListPlants", methods=["GET"])

@@ -39,26 +39,10 @@ def get_plant_id(species):
 def get_supported_plants(event, context):
     """Returns the list of the supported plants"""
     try:
-        parameters = utilities.get_parameters(event, [], [PARAM_SEARCH])
-        search = parameters[PARAM_SEARCH]
-
-    except utilities.MissingParameterException:
-        search = ""
-
-    try:
-        sql_statement = f'SELECT species, websiteUrl FROM {db_dealer.DATABASE}.{db_dealer.SUPPORTED_PLANT_TABLE}'
-        if search:
-            sql_statement += f' WHERE species LIKE "%{search}%"'
-        sql_statement += f' ORDER BY species;'
-        response = db_dealer.execute_statement(sql_statement)
-
-        supported_plants = []
-        for record in response['records']:
-            plant = {
-                "species": record[0]['stringValue'],
-                "websiteUrl": record[1]['stringValue']
-            }
-            supported_plants.append(plant)
+        supported_plants = db_dealer.get_all_items(db_dealer.SUPPORTED_PLANT_TABLE)
+        for plant in supported_plants:
+            plant["species"] = plant["species"]["S"]
+            plant["websiteUrl"] = plant["websiteUrl"]["S"]
 
         return utilities.generate_http_response(supported_plants), 200
 
