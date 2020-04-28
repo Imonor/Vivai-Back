@@ -56,7 +56,7 @@ def insert_user_plant(event, context):
                                                PARAM_PLANT_SUNEXPO, PARAM_PLANT_SHARED])
         species = parameters[PARAM_SPECIES]
 
-        plant_id = supported_plants.get_plant_id(species)
+        plant_id, picUrl = supported_plants.get_plant_infos(species)
 
         
         if plant_id:
@@ -76,6 +76,9 @@ def insert_user_plant(event, context):
             if not parameters[PARAM_PLANT_SHARED]:
                 parameters[PARAM_PLANT_SHARED] = False
 
+            parameters["plantId"] = plant_id
+            parameters["picUrl"] = picUrl
+
             user_plant_id = db_dealer.insert_item(db_dealer.USER_PLANT_TABLE, parameters)
 
             response = {
@@ -94,28 +97,22 @@ def get_list_plants_user(event, context):
     "Get list of plants for the specified user"
     try:
         parameters = utilities.get_parameters(event, [PARAM_USER_ID], [])
-
         user_id = parameters[PARAM_USER_ID]
-
-        sql_statement = f'SELECT uplant.id, plantId, userId, nickname, location, temperature, sunExpo, shared, plant.picUrl \
-                          FROM {db_dealer.DATABASE}.{db_dealer.USER_PLANT_TABLE} as uplant JOIN \
-                          {db_dealer.DATABASE}.{db_dealer.PLANT_TABLE} as plant ON uplant.plantId = plant.id \
-                          WHERE uplant.userID = "{user_id}"'
-
-        response = db_dealer.execute_statement(sql_statement)
+        items = db_dealer.list_items(db_dealer.USER_PLANT_TABLE, "userId", user_id)
 
         plants = []
-        for record in response['records']:
+        for item in items:
             plant = {
-                "id": record[0]["longValue"],
-                "plantId": record[1]["longValue"],
-                "userId": record[2]["stringValue"],
-                "nickname": "NULL" if "isNull" in record[3] else record[3]["stringValue"],
-                "location": "NULL" if "isNull" in record[4] else record[4]["stringValue"],
-                "temperature": "NULL" if "isNull" in record[5] else record[5]["stringValue"],
-                "sunExpo": "NULL" if "isNull" in record[6] else record[6]["stringValue"],
-                "shared": record[7]["booleanValue"],
-                "picUrl": record[8]["stringValue"]
+                "id": item["id"]["S"],
+                "plantId": item["plantId"]["S"],
+                "userId": item["userId"]["S"],
+                "nickname": "NULL" if "NULL" in item["nickname"] else item["nickname"]["S"],
+                "location": "NULL" if "NULL" in item["location"] else item["location"]["S"],
+                "temperature": "NULL" if "NULL" in item["temperature"] else item["temperature"]["S"],
+                "sunExpo": "NULL" if "NULL" in item["sunExpo"] else item["sunExpo"]["S"],
+                "shared": item["shared"]["BOOL"],
+                "picUrl": item["picUrl"]["S"],
+                "species": item["species"]["S"]
             }
             plants.append(plant)
 

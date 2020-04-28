@@ -44,3 +44,39 @@ def insert_item(table, params):
 
     except ClientError as error:
         raise error
+
+def get_attributes(table, attributes, condition_param, condition_op, condition_value):
+    """Returns the wanted attributes for the first item that match the condition.
+       Parameter condition is a string describing the condition e.g. "species = 'basilic'"
+    """
+    condition = condition_param + " " + condition_op + " :val"
+
+    if isinstance(condition_value, str):
+        expr_attr_value = {":val": {"S": condition_value}}
+
+    elif isinstance(condition_value, bool):
+        expr_attr_value = {":val": {"BOOL": condition_value}}
+
+    else:
+        expr_attr_value = {":val": {"N": str(condition_value)}}
+
+    try: 
+        response = DYNAMODB_CLIENT.scan(TableName=table, Select="SPECIFIC_ATTRIBUTES", Limit=1,
+                                        ProjectionExpression=", ".join(attributes), FilterExpression=condition,
+                                        ExpressionAttributeValues=expr_attr_value)
+        if response["Items"]:
+            return response["Items"][0]
+        return None
+    except ClientError as error:
+        raise error
+
+def list_items(table, key_param, key_value):
+    """Returns all the items that match the given sort key"""
+    
+    condition = key_param + " = :val"
+    expr_attr_value = {":val": {"S": key_value}}
+
+    response = DYNAMODB_CLIENT.query(TableName=table, KeyConditionExpression=condition, 
+                                     ExpressionAttributeValues=expr_attr_value)
+
+    return response["Items"]

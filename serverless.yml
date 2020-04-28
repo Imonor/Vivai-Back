@@ -35,6 +35,7 @@ provider:
         - "dynamodb:Scan"
         - "dynamodb:GetItem"
         - "dynamodb:PutItem"
+        - "dynamodb:Query"
       Resource: "*"
 
 
