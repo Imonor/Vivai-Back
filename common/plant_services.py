@@ -55,21 +55,19 @@ def get_plant_infos(event, context):
         parameters = utilities.get_parameters(event, [PARAM_PLANT_ID], [])
         plantId = parameters[PARAM_PLANT_ID]
 
-        item = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["careLevel", "coldResistance", "family", \
-            "growth", "heightMature", "picUrl", "species", "sunNeed", "waterNeed", \
-                "widthMature"], "id", "=", plantId)
+        item = db_dealer.list_items(db_dealer.PLANT_TABLE, "id", plantId)
 
         response = {
-            "careLevel": item["careLevel"]["S"],
-            "coldResistance": item["coldResistance"]["S"],
-            "family": item["family"]["S"],
-            "growth": item["growth"]["S"],
-            "heightMature": item["heightMature"]["S"],
-            "picUrl": item["picUrl"]["S"],
-            "species": item["species"]["S"],
-            "sunNeed": item["sunNeed"]["S"],
-            "waterNeed": item["waterNeed"]["S"],
-            "widthMature": item["widthMature"]["S"]
+            "careLevel": item[0]["careLevel"]["S"],
+            "coldResistance": item[0]["coldResistance"]["S"],
+            "family": item[0]["family"]["S"],
+            "growth": item[0]["growth"]["S"],
+            "heightMature": item[0]["heightMature"]["S"],
+            "picUrl": item[0]["picUrl"]["S"],
+            "species": item[0]["species"]["S"],
+            "sunNeed": item[0]["sunNeed"]["S"],
+            "waterNeed": item[0]["waterNeed"]["S"],
+            "widthMature": item[0]["widthMature"]["S"]
         }
 
         return utilities.generate_http_response(response), 200

@@ -57,7 +57,7 @@ def delete_user_plant():
     body, status = plant_services.delete_user_plant(env["event"], env["context"])
     return make_response(body, status) """
 
-@APP.route("app/getPlantInfos", methods=["GET"])
+@APP.route("/app/getPlantInfos", methods=["GET"])
 def get_plant_infos():
     """Gives infos on plant with PlantId"""
     env = get_lambda_event_and_context()
