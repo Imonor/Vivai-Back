@@ -48,60 +48,47 @@ def delete_user_plant(event, context):
         return utilities.handle_error(error)
 
 
-def insert_plant_user(event, context):
+def insert_user_plant(event, context):
     "Insert plant for the specified user into the database"
     try:
         parameters = utilities.get_parameters(event, [PARAM_USER_ID, PARAM_SPECIES],
                                               [PARAM_PLANT_NICKNAME, PARAM_PLANT_LOCATION, PARAM_PLANT_TEMP,
                                                PARAM_PLANT_SUNEXPO, PARAM_PLANT_SHARED])
-        user_id = parameters[PARAM_USER_ID]
         species = parameters[PARAM_SPECIES]
 
-        res = supported_plants.get_plant_id(species)
+        plant_id, picUrl = supported_plants.get_plant_infos(species)
 
         
-        if "plantId" in res:
-            plant_id = res["plantId"]
-            
-            sql_start = f'INSERT INTO {db_dealer.DATABASE}.{db_dealer.USER_PLANT_TABLE} \
-                          (userId, plantId'
-            sql_end = f'VALUES ("{user_id}", {plant_id}'
+        if plant_id:
 
-            if parameters[PARAM_PLANT_NICKNAME]:
-                sql_start += f', {PARAM_PLANT_NICKNAME}'
-                sql_end += f', "{parameters[PARAM_PLANT_NICKNAME]}"'
+            if not parameters[PARAM_PLANT_NICKNAME]:
+                parameters[PARAM_PLANT_NICKNAME] = None
     
-            if parameters[PARAM_PLANT_LOCATION]:
-                sql_start += f', {PARAM_PLANT_LOCATION}'
-                sql_end += f', "{parameters[PARAM_PLANT_LOCATION]}"'
+            if not parameters[PARAM_PLANT_LOCATION]:
+                parameters[PARAM_PLANT_LOCATION] = None
     
-            if parameters[PARAM_PLANT_TEMP]:
-                sql_start += f', {PARAM_PLANT_TEMP}'
-                sql_end += f', {parameters[PARAM_PLANT_TEMP]}'
+            if not parameters[PARAM_PLANT_TEMP]:
+                parameters[PARAM_PLANT_TEMP] = None
     
-            if parameters[PARAM_PLANT_SUNEXPO]:
-                sql_start += f', {PARAM_PLANT_SUNEXPO}'
-                sql_end += f', "{parameters[PARAM_PLANT_SUNEXPO]}"'
+            if not parameters[PARAM_PLANT_SUNEXPO]:
+                parameters[PARAM_PLANT_SUNEXPO] = None
     
-            if parameters[PARAM_PLANT_SHARED]:
-                sql_start += f', {PARAM_PLANT_SHARED}'
-                sql_end += f', {parameters[PARAM_PLANT_SHARED]}'
-    
-            sql_statement = sql_start + ') ' + sql_end + ');'
-    
-            transaction_id = db_dealer.begin_transaction()
-            ins = db_dealer.execute_statement_with_id(sql_statement, transaction_id)
-            db_dealer.commit_transaction(transaction_id)
+            if not parameters[PARAM_PLANT_SHARED]:
+                parameters[PARAM_PLANT_SHARED] = False
+
+            parameters["plantId"] = plant_id
+            parameters["picUrl"] = picUrl
+
+            user_plant_id = db_dealer.insert_item(db_dealer.USER_PLANT_TABLE, parameters)
 
             response = {
-                "userPlantId": ins["generatedFields"][0]["longValue"],
-                "userId": parameters[PARAM_USER_ID],
+                "userPlantId": user_plant_id,
                 "plantId": plant_id
             }
     
             return utilities.generate_http_response(response), 200
         
-        return utilities.generate_http_response(res), 501
+        return utilities.generate_http_response({"Message": "Web-scrapping nécessaire"}), 501
         
     except (ClientError, utilities.MissingParameterException) as error:
         return utilities.handle_error(error)
@@ -110,28 +97,22 @@ def get_list_plants_user(event, context):
     "Get list of plants for the specified user"
     try:
         parameters = utilities.get_parameters(event, [PARAM_USER_ID], [])
-
         user_id = parameters[PARAM_USER_ID]
-
-        sql_statement = f'SELECT uplant.id, plantId, userId, nickname, location, temperature, sunExpo, shared, plant.picUrl \
-                          FROM {db_dealer.DATABASE}.{db_dealer.USER_PLANT_TABLE} as uplant JOIN \
-                          {db_dealer.DATABASE}.{db_dealer.PLANT_TABLE} as plant ON uplant.plantId = plant.id \
-                          WHERE uplant.userID = "{user_id}"'
-
-        response = db_dealer.execute_statement(sql_statement)
+        items = db_dealer.list_items(db_dealer.USER_PLANT_TABLE, "userId", user_id)
 
         plants = []
-        for record in response['records']:
+        for item in items:
             plant = {
-                "id": record[0]["longValue"],
-                "plantId": record[1]["longValue"],
-                "userId": record[2]["stringValue"],
-                "nickname": "NULL" if "isNull" in record[3] else record[3]["stringValue"],
-                "location": "NULL" if "isNull" in record[4] else record[4]["stringValue"],
-                "temperature": "NULL" if "isNull" in record[5] else record[5]["stringValue"],
-                "sunExpo": "NULL" if "isNull" in record[6] else record[6]["stringValue"],
-                "shared": record[7]["booleanValue"],
-                "picUrl": record[8]["stringValue"]
+                "id": item["id"]["S"],
+                "plantId": item["plantId"]["S"],
+                "userId": item["userId"]["S"],
+                "nickname": "NULL" if "NULL" in item["nickname"] else item["nickname"]["S"],
+                "location": "NULL" if "NULL" in item["location"] else item["location"]["S"],
+                "temperature": "NULL" if "NULL" in item["temperature"] else item["temperature"]["S"],
+                "sunExpo": "NULL" if "NULL" in item["sunExpo"] else item["sunExpo"]["S"],
+                "shared": item["shared"]["BOOL"],
+                "picUrl": item["picUrl"]["S"],
+                "species": item["species"]["S"]
             }
             plants.append(plant)
 
@@ -146,29 +127,12 @@ def add_plant(attributes):
         Returns the request response in case of success, raises an error otherwise"""
 
     try:
-        sql_statement = f'INSERT INTO {db_dealer.DATABASE}.{db_dealer.PLANT_TABLE}({PARAM_SPECIES}, \
-                          {PARAM_PIC_URL}, {PARAM_WATER_NEED}, {PARAM_CARE_LEVEL}, {PARAM_GROWTH}, \
-                          {PARAM_COLD_RESISTANCE}, {PARAM_SUN_NEED}, {PARAM_HEIGHT_MATURE}, {PARAM_WIDTH_MATURE}'
+        if PARAM_FAMILY not in attributes:
+            attributes[PARAM_FAMILY] = None
 
-        if attributes.get(PARAM_FAMILY):
-            sql_statement += f', {PARAM_FAMILY}'
+        plant_id = db_dealer.insert_item(db_dealer.PLANT_TABLE, attributes)
 
-        sql_statement += f') VALUES("{attributes[PARAM_SPECIES]}", "{attributes[PARAM_PIC_URL]}", \
-                           "{attributes[PARAM_WATER_NEED]}", "{attributes[PARAM_CARE_LEVEL]}", \
-                           "{attributes[PARAM_GROWTH]}", "{attributes[PARAM_COLD_RESISTANCE]}", \
-                           "{attributes[PARAM_SUN_NEED]}", {attributes[PARAM_HEIGHT_MATURE]}, \
-                           {attributes[PARAM_WIDTH_MATURE]}'
-
-        if attributes.get(PARAM_FAMILY):
-            sql_statement += f', "{attributes[PARAM_FAMILY]}"'
-
-        sql_statement += f');'
-
-        transaction_id = db_dealer.begin_transaction()
-        res_add = db_dealer.execute_statement_with_id(sql_statement, transaction_id)
-        db_dealer.commit_transaction(transaction_id)
-
-        return res_add
+        return plant_id
 
     except ClientError as error:
         raise error
