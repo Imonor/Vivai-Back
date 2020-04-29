@@ -7,6 +7,7 @@ Ma plante a besoin de beaucoup d'eau ?,arrosage
 De quelle quantité d'eau ma plante a t'elle besoin ?,arrosage
 J'aimerais arroser ma plante,arrosage
 Ma plante a soif,arrosage
+Je pense que ma plante a soif,arrosage
 "Ma plante n'a pas l'air bien, que dois-je faire ?",arrosage
 combien de fois dois je donner de l'eau à ma plante ?,arrosage
 comment puis je donner à boire à ma plante ?,arrosage
@@ -20,28 +21,37 @@ ma plante a soif ?,arrosage
 ma plante devient jaune,arrosage
 les feuilles deviennent marron,arrosage
 Ma plante a t-elle besoin de soleil ?,soleil
+Ma plante a t-elle besoin de beaucoup de soleil ?,soleil
 Quelle exposition pour ma plante,soleil
 Quelle luminosité pour ma plante,soleil
 Ma plante a-t-elle besoin de beaucoup de soleil,soleil
+Ma plante a besoin de beaucoup de soleil?,soleil
 comment bien exposer sa plante,soleil
 soleil,soleil
 exposition,soleil
 luminosité,soleil
 éclairage,soleil
 comment bien éclairer ma plante,soleil
+bien éclairer ma plante,soleil
 ma plante manque de soleil,soleil
 faut-il mettre ma plante dans l'ombre,soleil
+dois-je mettre ma plante dans l'ombre,soleil
 les plantes ont-elles besoin de vitamine D,soleil
+vitamine D,soleil
 aide exposition plante,soleil
 trouver la bonne luminosité,soleil
 faible intensité lumineuse,soleil
 forte intensité lumineuse,soleil
 ai-je besoin d'une lampe horticole,soleil
+lampe horticole,soleil
 est-ce que je peux laisser ma plante près de la lampe,soleil
 est-ce que je dois ouvrir les rideaux,soleil
 dois je ouvrir les rideaux ?,soleil
 Comment bien couper ma plante ?,tailler
 Faut-il tailler ma plante ?,tailler
+tailler ma plante ?,tailler
+couper les feuilles,tailler
+couper les feuilles,tailler
 quand dois-je couper les feuilles de ma plante ?,tailler
 A quelle période faut-il tailler ma plante,tailler
 Ma plante devient trop grande,tailler
@@ -49,17 +59,14 @@ Couper les tiges,tailler
 Quelle est la période pour tailler une plante ?,tailler
 Quand et comment tailler ma plante ?,tailler
 Quel mois pour tailler ma plante,tailler
-Taille d'entretien pour ma plante,tailler
-Taille de fructification pour ma plante,tailler
 enlever les bois morts,tailler
 tailler efficacement une plante,tailler
 les branches sont trop grandes,tailler
-donner une forme à sa plante,tailler
-prélever les feuilles de ma plante,tailler
+branches trop grandes,tailler
+couper feuilles de ma plante,tailler
 Couper,tailler
 tailler,tailler
 rendre plante plus productive,tailler
-obtenir plus de fruits,tailler
 A quelle température faut-il conserver ma plante,temperature
 ma plante a trop chaud,temperature
 ma plante a trop froid,temperature
@@ -156,8 +163,6 @@ est-ce que je peux manger ma plante,utilisation
 manger les feuilles ,utilisation
 manger les fleurs,utilisation
 utiliser ma planter,utilisation
-ma plante protège-t-elle des insectes,utilisation
-repousser les moustiques,utilisation
 quelle est l'histoire de ma plante,utilisation
 origine de ma plante,utilisation
 où ma plante est-elle apparue,utilisation
@@ -168,8 +173,23 @@ ma plante a des propriétés spéciales,utilisation
 où ma plante est-elle utilisée,utilisation
 dans quel pays ma plante pousse,utilisation
 à quoi sert ma plante,utilisation
+est-ce que ma plante pousse dans la forêt ?,utilisation
+à quoi ma plante peut servir ?,utilisation
+est-ce que les feuilles de ma plante se mangent ?,utilisation
+est-ce que les fleurs de ma plante se mangent ?,utilisation
+comment puis-je utiliser ma plante ?,utilisation
+raconte moi l'histoire de ma plante,utilisation
+quelle est l'origine de ma plante,utilisation
+où est apparue ma plante ?,utilisation
+puis-je manger ma plante ,utilisation
+puis-je utiliser les feuilles de ma plante pour faire du thé,utilisation
+puis-je utiliser les feuilles de ma plante pour faire de l'infusion,utilisation
+quelles sont les propriétés de ma plante,utilisation
+dans quel pays ou région je peux trouver ma plante,utilisation
 Quels produits dois-je utiliser ?,planter
-je dois mettre du terreau ?,planter
+je dois mettre du terreau ?,
+quel type de terreau utilisé ?,planter 
+dans quelle zone planter ma plante ?,planter 
 je dois mettre de l'engrais ?,planter
 dois je remuer la terre ?,planter
 comment planter ma plante ?,planter
@@ -182,6 +202,8 @@ besoin de terreau ?,planter
 besoin d'engrais ?,planter
 où planter ma plante ?,planter
 Il y a t'il un risque d'allergie ?,maladies
+il y a des sortes de pucerons sur les feuilles,maladies
+puis-je être allergique à ma plante,maladies
 ma plante est malade,maladies
 ma plante a des pucerons,maladies
 pucerons,maladies
