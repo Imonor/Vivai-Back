@@ -1,8 +1,8 @@
 """File containing services for Supported Plants"""
 
 from botocore.exceptions import ClientError
-import common.db_dealer as db_dealer
-import common.utilities as utilities
+import db_dealer
+import utilities
 
 PARAM_SEARCH = "search"
 PARAM_SPECIES = "species"
