@@ -36,7 +36,7 @@ def delete_user_plant(event, context):
         parameters = utilities.get_parameters(event, [PARAM_USER_PLANT_ID], [])
         user_plant_id = parameters[PARAM_USER_PLANT_ID]
 
-        sql_statement = f'DELETE FROM {db_dealer.DATABASE}.{db_dealer.USER_PLANT_TABLE} \
+        sql_statement = f'DELETE FROM {db_dealer.DATABASE}.{db_dealer.USER_PLANT_TABLE} 
             WHERE id = {user_plant_id};'
 
         transaction_id = db_dealer.begin_transaction()
