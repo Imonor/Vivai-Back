@@ -28,6 +28,7 @@ PARAM_WIDTH_MATURE = "widthMature"
 
 PARAM_USER_PLANT_ID = "userPlantId"
 
+"""
 def delete_user_plant(event, context):
     "Delete plant at the specified user plant ID"
 
@@ -46,7 +47,22 @@ def delete_user_plant(event, context):
 
     except (ClientError, utilities.MissingParameterException) as error:
         return utilities.handle_error(error)
+"""
 
+def get_plant_infos(event, context):
+    """Gives infos on plant with plantId"""
+    try:
+        parameters = utilities.get_parameters(event, [PARAM_PLANT_ID], [])
+        plantId = parameters[PARAM_PLANT_ID]
+
+        item = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["careLevel", "coldResistance", "family", \
+            "growth", "heightMature", "picUrl", "species", "sunNeed", "waterNeed", \
+                "widthMature"], "id", "=", plantId)
+
+        return utilities.generate_http_response(item), 200
+    
+    except (ClientError, utilities.MissingParameterException) as error:
+        return utilities.handle_error(error)
 
 def insert_user_plant(event, context):
     "Insert plant for the specified user into the database"
