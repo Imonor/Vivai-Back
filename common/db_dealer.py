@@ -47,7 +47,8 @@ def insert_item(table, params):
 
 def get_attributes(table, attributes, condition_param, condition_op, condition_value):
     """Returns the wanted attributes for the first item that match the condition.
-       Parameter condition is a string describing the condition e.g. "species = 'basilic'"
+       Useful when you don't know an item's id, otherwise use get_item
+       If parameter 'attributes' is empty, returns all the item's attributes
     """
     condition = condition_param + " " + condition_op + " :val"
 
@@ -60,10 +61,15 @@ def get_attributes(table, attributes, condition_param, condition_op, condition_v
     else:
         expr_attr_value = {":val": {"N": str(condition_value)}}
 
-    try: 
-        response = DYNAMODB_CLIENT.scan(TableName=table, Select="SPECIFIC_ATTRIBUTES", Limit=1,
-                                        ProjectionExpression=", ".join(attributes), FilterExpression=condition,
-                                        ExpressionAttributeValues=expr_attr_value)
+    try:
+        if attributes:
+            response = DYNAMODB_CLIENT.scan(TableName=table, Select="SPECIFIC_ATTRIBUTES", Limit=1,
+                                            ProjectionExpression=", ".join(attributes), FilterExpression=condition,
+                                            ExpressionAttributeValues=expr_attr_value)
+        else:
+            response = DYNAMODB_CLIENT.scan(TableName=table, Limit=1, FilterExpression=condition,
+                                            ExpressionAttributeValues=expr_attr_value)
+
         if response["Items"]:
             return response["Items"][0]
         return None
@@ -76,7 +82,25 @@ def list_items(table, key_param, key_value):
     condition = key_param + " = :val"
     expr_attr_value = {":val": {"S": key_value}}
 
-    response = DYNAMODB_CLIENT.query(TableName=table, KeyConditionExpression=condition, 
-                                     ExpressionAttributeValues=expr_attr_value)
+    try:
+        response = DYNAMODB_CLIENT.query(TableName=table, KeyConditionExpression=condition, 
+                                        ExpressionAttributeValues=expr_attr_value)
 
-    return response["Items"]
+        return response["Items"]
+    except ClientError as error:
+        raise error
+
+def get_item(table, item_id, attributes):
+    """Returns the item with the given id
+       If parameter 'attributes' is empty, returns all the item's attributes"""
+    key = {"id": {"S": item_id}}
+    try:
+        if attributes:
+            item = DYNAMODB_CLIENT.get_item(TableName=table, Key=key, ProjectionExpression=", ".join(attributes))
+        else:    
+            item = DYNAMODB_CLIENT.get_item(TableName=table, Key=key)
+
+        return item["Item"]
+
+    except ClientError as error:
+        raise error
