@@ -1,11 +1,11 @@
-"File for Plant Services"
+"""File for Plant Services"""
 
 from botocore.exceptions import ClientError
 
-import common.utilities as utilities
-import common.db_dealer as db_dealer
+import utilities
+import db_dealer
 
-import common.supported_plants as supported_plants
+import supported_plants
 
 PARAM_USER_ID = "userId"
 PARAM_PLANT_ID = "plantId"
@@ -30,7 +30,7 @@ PARAM_USER_PLANT_ID = "userPlantId"
 
 """
 def delete_user_plant(event, context):
-    "Delete plant at the specified user plant ID"
+    Delete plant at the specified user plant ID
 
     try:
         parameters = utilities.get_parameters(event, [PARAM_USER_PLANT_ID], [])
@@ -53,9 +53,9 @@ def get_plant_infos(event, context):
     """Gives infos on plant with plantId"""
     try:
         parameters = utilities.get_parameters(event, [PARAM_PLANT_ID], [])
-        plantId = parameters[PARAM_PLANT_ID]
+        plant_id = parameters[PARAM_PLANT_ID]
 
-        item = db_dealer.list_items(db_dealer.PLANT_TABLE, "id", plantId)
+        item = db_dealer.list_items(db_dealer.PLANT_TABLE, "id", plant_id)
 
         response = {
             "careLevel": item[0]["careLevel"]["S"],
