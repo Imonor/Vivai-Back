@@ -104,3 +104,14 @@ def get_item(table, item_id, attributes):
 
     except ClientError as error:
         raise error
+
+def delete_item(table, item_id, other_id_param, other_id_value):
+    """Deletes an item from the table"""
+    key = {"id": {"S": item_id}}
+    if other_id_param and other_id_value:
+        key[other_id_param] = {"S": other_id_value}
+    try:
+        DYNAMODB_CLIENT.delete_item(TableName=table, Key=key)
+        return True
+    except ClientError as error:
+        raise error

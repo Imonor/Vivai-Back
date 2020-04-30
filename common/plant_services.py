@@ -33,15 +33,11 @@ def delete_user_plant(event, context):
     """Delete plant at the specified user plant ID"""
 
     try:
-        parameters = utilities.get_parameters(event, [PARAM_USER_PLANT_ID], [])
+        parameters = utilities.get_parameters(event, [PARAM_USER_ID, PARAM_USER_PLANT_ID], [])
+        user_id = parameters[PARAM_USER_ID]
         user_plant_id = parameters[PARAM_USER_PLANT_ID]
 
-        sql_statement = f'DELETE FROM {db_dealer.DATABASE}.{db_dealer.USER_PLANT_TABLE} \
-            WHERE id = {user_plant_id};'
-
-        transaction_id = db_dealer.begin_transaction()
-        db_dealer.execute_statement_with_id(sql_statement, transaction_id)
-        db_dealer.commit_transaction(transaction_id)
+        db_dealer.delete_item(db_dealer.USER_PLANT_TABLE, user_plant_id, "userId", user_id)
 
         return utilities.generate_http_response({"Message": "Successfully deleted"}), 200
 
