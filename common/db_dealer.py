@@ -90,10 +90,14 @@ def list_items(table, key_param, key_value):
     except ClientError as error:
         raise error
 
-def get_item(table, item_id, attributes):
+def get_item(table, item_id, other_id_param, other_id_value, attributes):
     """Returns the item with the given id
        If parameter 'attributes' is empty, returns all the item's attributes"""
     key = {"id": {"S": item_id}}
+
+    if other_id_param and other_id_value:
+        key[other_id_param] = {"S": other_id_value}
+
     try:
         if attributes:
             item = DYNAMODB_CLIENT.get_item(TableName=table, Key=key, ProjectionExpression=", ".join(attributes))

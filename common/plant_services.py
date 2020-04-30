@@ -14,6 +14,7 @@ PARAM_PLANT_TEMP = "temperature"
 PARAM_PLANT_SUNEXPO = "sunExpo"
 PARAM_PLANT_SHARED = "shared"
 PARAM_PLANT_NICKNAME = "nickname"
+PARAM_USER_PLANT_ID = "userPlantId"
 
 PARAM_SPECIES = "species"
 PARAM_FAMILY = "family"
@@ -26,11 +27,8 @@ PARAM_SUN_NEED = "sunNeed"
 PARAM_HEIGHT_MATURE = "heightMature"
 PARAM_WIDTH_MATURE = "widthMature"
 
-PARAM_USER_PLANT_ID = "userPlantId"
-
-"""
 def delete_user_plant(event, context):
-    Delete plant at the specified user plant ID
+    """Delete plant at the specified user plant ID"""
 
     try:
         parameters = utilities.get_parameters(event, [PARAM_USER_ID, PARAM_USER_PLANT_ID], [])
@@ -43,7 +41,6 @@ def delete_user_plant(event, context):
 
     except (ClientError, utilities.MissingParameterException) as error:
         return utilities.handle_error(error)
-"""
 
 def get_plant_infos(event, context):
     """Gives infos on plant with plantId"""
@@ -51,19 +48,19 @@ def get_plant_infos(event, context):
         parameters = utilities.get_parameters(event, [PARAM_PLANT_ID], [])
         plant_id = parameters[PARAM_PLANT_ID]
 
-        item = db_dealer.list_items(db_dealer.PLANT_TABLE, "id", plant_id)
+        item = db_dealer.get_item(db_dealer.PLANT_TABLE, plant_id, "", "", [])
 
         response = {
-            "careLevel": item[0]["careLevel"]["S"],
-            "coldResistance": item[0]["coldResistance"]["S"],
-            "family": item[0]["family"]["S"],
-            "growth": item[0]["growth"]["S"],
-            "heightMature": item[0]["heightMature"]["S"],
-            "picUrl": item[0]["picUrl"]["S"],
-            "species": item[0]["species"]["S"],
-            "sunNeed": item[0]["sunNeed"]["S"],
-            "waterNeed": item[0]["waterNeed"]["S"],
-            "widthMature": item[0]["widthMature"]["S"]
+            "careLevel": item["careLevel"]["S"],
+            "coldResistance": item["coldResistance"]["S"],
+            "family": item["family"]["S"],
+            "growth": item["growth"]["S"],
+            "heightMature": item["heightMature"]["S"],
+            "picUrl": item["picUrl"]["S"],
+            "species": item["species"]["S"],
+            "sunNeed": item["sunNeed"]["S"],
+            "waterNeed": item["waterNeed"]["S"],
+            "widthMature": item["widthMature"]["S"]
         }
 
         return utilities.generate_http_response(response), 200
