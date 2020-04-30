@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import spacy
+
 from joblib import load
+
 
 def getIntention(sentence):
     
@@ -35,4 +37,4 @@ def getIntention(sentence):
     p = clf_svm.predict([vector])
     
     intentions = load('intentions.joblib')
-    return(intentions[p])
+    return(intentions[int(p[0])])
