@@ -50,12 +50,12 @@ def get_list_plants_user():
     return make_response(body, status)
 
 
-# @APP.route("/app/deletePlant", methods=["PUT"])
-# def delete_user_plant():
-#     """Deletes the plant for the user"""
-#     env = get_lambda_event_and_context()
-#     body, status = plant_services.delete_user_plant(env["event"], env["context"])
-#     return make_response(body, status)
+@APP.route("/app/deleteUserPlant", methods=["PUT"])
+def delete_user_plant():
+    """Deletes the plant for the user"""
+    env = get_lambda_event_and_context()
+    body, status = plant_services.delete_user_plant(env["event"], env["context"])
+    return make_response(body, status)
 
 @APP.route("/app/getPlantInfos", methods=["GET"])
 def get_plant_infos():
