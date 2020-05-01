@@ -33,7 +33,7 @@ def get_random_infos(event, context):
     try:
         lines = open('./common/anecdotes.txt').read().splitlines()
         line = random.choice(lines)
-        return utilities.generate_http_response({"Info": line), 200
+        return utilities.generate_http_response({"Info": line}), 200 
 
     except ClientError as error:
         raise error 
