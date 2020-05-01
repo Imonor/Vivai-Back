@@ -14,28 +14,26 @@ def get_shared_plants(event, context):
     try:
         parameters = utilities.get_parameters(event, [PARAM_PLANT_ID], [])
         plant_id = parameters[PARAM_PLANT_ID]
+        items = db_dealer.get_all_items(db_dealer.USER_PLANT_TABLE)
 
-        items = db_dealer.list_items(db_dealer.USER_PLANT_TABLE, ["plantId", "shared"], [plant_id, True])
-
-        shared_plants = []
+        plants = []
         for item in items:
-            shared_plant = {
-                "userId": item["userId"]["S"],
-                "id": item["id"]["S"],
-                "location": "NULL" if "NULL" in item["location"] else item["location"]["S"],
-                "nickname": "NULL" if "NULL" in item["nickname"] else item["nickname"]["S"],
-                "picUrl": item["picUrl"]["S"],
-                "plantId": item["plantId"]["S"],
-                "shared": item["shared"]["BOOL"],
-                "species": item["species"]["S"],
-                "temperature": "NULL" if "NULL" in item["temperature"] else item["temperature"]["S"],
-                "sunExpo": "NULL" if "NULL" in item["sunExpo"] else item["sunExpo"]["S"]
-            }
-            shared_plants.append(shared_plant)
+            if item["plantId"]["S"] == plant_id and item["shared"]["BOOL"]:
+                plant = {
+                    "id": item["id"]["S"],
+                    "plantId": item["plantId"]["S"],
+                    "userId": item["userId"]["S"],
+                    "nickname": "NULL" if "NULL" in item["nickname"] else item["nickname"]["S"],
+                    "location": "NULL" if "NULL" in item["location"] else item["location"]["S"],
+                    "temperature": "NULL" if "NULL" in item["temperature"] else item["temperature"]["S"],
+                    "sunExpo": "NULL" if "NULL" in item["sunExpo"] else item["sunExpo"]["S"],
+                    "species": item["species"]["S"]
+                }
+                plants.append(plant)
 
-        return utilities.generate_http_response(shared_plants), 200
-    
-    except ClientError as error:
+        return utilities.generate_http_response(plants), 200
+
+    except (ClientError, utilities.MissingParameterException) as error:
         return utilities.handle_error(error)
 
 
