@@ -5,6 +5,7 @@ from flask import make_response
 
 import common.supported_plants as supported_plants
 import common.plant_services as plant_services
+import common.user_plant as user_plant
 
 APP = Flask(__name__)
 APP.debug = True
@@ -62,4 +63,11 @@ def get_plant_infos():
     """Gives infos on plant with PlantId"""
     env = get_lambda_event_and_context()
     body, status = plant_services.get_plant_infos(env["event"], env["context"])
+    return make_response(body, status)
+
+@APP.route("/app/getUserPlantInfos", methods=["GET"])
+def get_user_plant_infos():
+    """Gives infos on a user plant with UserPlantId and UserId"""
+    env = get_lambda_event_and_context()
+    body, status = user_plant.get_user_plant_infos(env["event"], env["context"])
     return make_response(body, status)
