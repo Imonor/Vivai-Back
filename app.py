@@ -72,7 +72,6 @@ def get_user_plant_infos():
     body, status = user_plant.get_user_plant_infos(env["event"], env["context"])
     return make_response(body, status)
 
-
 @APP.route("/app/getSharedPlants", methods=["GET"])
 def get_shared_plants():
     """Returns shared plants with specified plantID"""
