@@ -36,7 +36,7 @@ def get_random_infos(event, context):
         return utilities.generate_http_response(line)
 
     except ClientError as error:
-        raise error
+        raise error 
 
 def delete_user_plant(event, context):
     """Delete plant at the specified user plant ID"""
