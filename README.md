@@ -19,4 +19,4 @@ Example: to invoke the function named hello: `GET https://BASEURL/app/hello`
 | getUserPlantInfos  | GET   | Returns the user plant | app/getUserPlantInfos | userId(string), userPlantId(string) (**REQUIRED**)  | {"id": "d71cda2b-b329-4fcd-9daa-e1fe5be374cc", "plantId": "9acb5af3-40c3-485d-b6a0-d2f48a5dac80", "userId": "9acb5af3-40c3-485d-b6a0-d2f48a5dac80", "nickname": "NULL", "location": "NULL", "temperature": "NULL", "sunExpo": "NULL", "shared": false, "picUrl": "http://basilic.png", "species": "Basilic"} |
 | getRandomInfos | GET | Gives random infos and anecdotes on plants | app/getRandomInfos | | {"Info": "Le basilic vient du nom latin..."} |
 | getSharedPlants | GET | Returns all shared plants of given plantID | app/getSharedPlants | plantId(string) | [{"id": "8943799a-9228-4fac-9b35-33409ad7cb2e", "plantId": "9acb5af3-40c3-485d-b6a0-d2f48a5dac80", "userId": "f734bc6d-b516-404a-8bdb-21a26f3a85fb", "nickname": "Henry", "location": "Jardin", "temperature": "17,5°C - 20°C",
-"sunExpo": "2", "species": "Basilic"}] |
+"sunExpo": "2", "species": "Basilic"}] | 
