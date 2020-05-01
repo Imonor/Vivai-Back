@@ -1,5 +1,7 @@
 """File for Plant Services"""
 
+import random
+
 from botocore.exceptions import ClientError
 
 import common.utilities as utilities
@@ -26,6 +28,15 @@ PARAM_COLD_RESISTANCE = "coldResistance"
 PARAM_SUN_NEED = "sunNeed"
 PARAM_HEIGHT_MATURE = "heightMature"
 PARAM_WIDTH_MATURE = "widthMature"
+
+def get_random_infos(event, context):
+    try:
+        lines = open('anecdotes.txt').read().splitlines()
+        line = random.choice(lines)
+        return utilities.generate_http_response(line)
+
+    except ClientError as error:
+        raise error
 
 def delete_user_plant(event, context):
     """Delete plant at the specified user plant ID"""

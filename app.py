@@ -71,3 +71,10 @@ def get_user_plant_infos():
     env = get_lambda_event_and_context()
     body, status = user_plant.get_user_plant_infos(env["event"], env["context"])
     return make_response(body, status)
+
+@APP.route("/app/getRandomInfos", methods=["GET"])
+def get_plant_anecdotes():
+    """Gives random infos on plants""" 
+    env = get_lambda_event_and_context()
+    body, status = plant_services.get_random_infos(env["event"], env["context"])
+    return make_response(body, status)
