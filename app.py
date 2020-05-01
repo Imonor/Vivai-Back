@@ -78,3 +78,10 @@ def get_plant_anecdotes():
     env = get_lambda_event_and_context()
     body, status = plant_services.get_random_infos(env["event"], env["context"])
     return make_response(body, status)
+
+@APP.route("/app/getSharedPlants", methods=["GET"])
+def get_shared_plants():
+    """Returns shared plants with specified plantID"""
+    env = get_lambda_event_and_context()
+    body, status = user_plant.get_shared_plants(env["event"], env["context"])
+    return make_response(body, status)
