@@ -31,9 +31,9 @@ PARAM_WIDTH_MATURE = "widthMature"
 
 def get_random_infos(event, context):
     try:
-        lines = open('anecdotes.txt').read().splitlines()
+        lines = open('./common/anecdotes.txt').read().splitlines()
         line = random.choice(lines)
-        return utilities.generate_http_response(line)
+        return utilities.generate_http_response(line), 200
 
     except ClientError as error:
         raise error 
