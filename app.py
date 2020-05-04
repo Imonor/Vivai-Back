@@ -6,6 +6,7 @@ from flask import make_response
 import common.supported_plants as supported_plants
 import common.plant_services as plant_services
 import common.user_plant as user_plant
+import common.reporting as reporting
 
 APP = Flask(__name__)
 APP.debug = True
@@ -84,4 +85,11 @@ def get_shared_plants():
     """Returns shared plants with specified plantID"""
     env = get_lambda_event_and_context()
     body, status = user_plant.get_shared_plants(env["event"], env["context"])
+    return make_response(body, status)
+
+@APP.route("/app/addReporting", methods=["PUT"])
+def add_reporting():
+    """Adds a reporting in DB"""
+    env = get_lambda_event_and_context()
+    body, status = reporting.add_reporting(env["event"], env["context"])
     return make_response(body, status)
