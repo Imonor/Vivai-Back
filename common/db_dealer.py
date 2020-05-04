@@ -13,6 +13,7 @@ SUPPORTED_PLANT_TABLE = "SupportedPlant"
 PLANT_TABLE = "Plant"
 USER_PLANT_TABLE = "UserPlant"
 PLANT_TABLE = "Plant"
+REPORTING_TABLE = "Reporting"
 
 def get_all_items(table):
     """Returns all items from a table"""
@@ -26,8 +27,12 @@ def insert_item(table, params):
     """Inserts an item in the given table, using the parameters.
        Returns the generated UUID"""
     try:
-        item_id = str(uuid4())
-        item = {"id": {"S": item_id}}
+        if table == REPORTING_TABLE:
+            item = {}
+            item_id = params["userPlantId"]
+        else:
+            item_id = str(uuid4())
+            item = {"id": {"S": item_id}}
 
         for param in params:
             if params[param] is None:
@@ -121,6 +126,7 @@ def delete_item(table, item_id, other_id_param, other_id_value):
         return True
     except ClientError as error:
         raise error
+
 def insert_supported_plants(supported_plants_list):
     """Insert all supported plants"""
     logger = logging.getLogger()
