@@ -90,8 +90,8 @@ def list_items(table, key_param, key_value):
     expr_attr_value = {":val": {"S": key_value}}
 
     try:
-        response = DYNAMODB_CLIENT.query(TableName=table, KeyConditionExpression=condition, 
-                                        ExpressionAttributeValues=expr_attr_value)
+        response = DYNAMODB_CLIENT.query(TableName=table, KeyConditionExpression=condition,
+                                         ExpressionAttributeValues=expr_attr_value)
 
         return response["Items"]
     except ClientError as error:
