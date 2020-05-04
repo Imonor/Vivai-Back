@@ -23,6 +23,28 @@ def get_all_items(table):
     except ClientError as error:
         raise error
 
+def update_item(table, params):
+    """Updates an item in the given table"""
+    try:
+        if table == USER_PLANT_TABLE:
+            key = {"id": {"S": params["userPlantId"]},
+                    "userId": {"S": params["userId"]}}
+            params.pop("userPlantId")
+            params.pop("userId")
+
+        attributes = {}
+        
+        for param in params:
+            if isinstance(params[param], str):
+                attributes[param] = {'Value': {'S': params[param]}}
+            elif isinstance(params[param], bool):
+                attributes[param] = {'Value': {'BOOL': params[param]}}
+
+        DYNAMODB_CLIENT.update_item(TableName=table, Key=key, AttributeUpdates=attributes)
+    
+    except ClientError as error:
+        raise error
+
 def insert_item(table, params):
     """Inserts an item in the given table, using the parameters.
        Returns the generated UUID"""
