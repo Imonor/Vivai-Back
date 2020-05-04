@@ -38,6 +38,7 @@ provider:
         - "dynamodb:Query"
         - "dynamodb:DeleteItem"
         - "dynamodb:UpdateItem"
+        - "dynamobd:BatchWriteItem"
       Resource: "*"
 
 

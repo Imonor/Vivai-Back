@@ -1,5 +1,7 @@
 """File containing all the functions to deal with the database"""
 
+import logging
+
 from uuid import uuid4
 import boto3
 from botocore.exceptions import ClientError
@@ -117,5 +119,25 @@ def delete_item(table, item_id, other_id_param, other_id_value):
     try:
         DYNAMODB_CLIENT.delete_item(TableName=table, Key=key)
         return True
+    except ClientError as error:
+        raise error
+def insert_supported_plants(supported_plants_list):
+    """Insert all supported plants"""
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+
+    put_items_list = []
+
+    for elem in supported_plants_list:
+        item = {"PutRequest": {"Item": elem}}
+        put_items_list.append(item)
+
+    request = {SUPPORTED_PLANT_TABLE: put_items_list}
+
+    try:
+        response = DYNAMODB_CLIENT.batch_write_item(RequestItems=request)
+        if response["UnprocessedItems"]:
+            logger.info(response["UnprocessedItems"][SUPPORTED_PLANT_TABLE])
+
     except ClientError as error:
         raise error
