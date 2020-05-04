@@ -30,23 +30,15 @@ provider:
         - "s3:ListBucketVersions"
       Resource: "*"
 
-    - Effect: "Allow" # Aurora Serverless Data API - Secret
-      Action:
-        - "secretsmanager:GetSecretValue"
-        - "secretsmanager:PutResourcePolicy"
-        - "secretsmanager:PutSecretValue"
-        - "secretsmanager:DeleteSecret"
-        - "secretsmanager:DescribeSecret"
-        - "secretsmanager:TagResource"
-      Resource:
-        - '*'
-
     - Effect: "Allow" # Aurora Serverless Data API
       Action:
-        - "rds-data:BeginTransaction"
-        - "rds-data:CommitTransaction"
-        - "rds-data:ExecuteStatement"
-        - "rds-data:RollbackTransaction"
+        - "dynamodb:Scan"
+        - "dynamodb:GetItem"
+        - "dynamodb:PutItem"
+        - "dynamodb:Query"
+        - "dynamodb:DeleteItem"
+        - "dynamodb:UpdateItem"
+        - "dynamobd:BatchWriteItem"
       Resource: "*"
 
 
