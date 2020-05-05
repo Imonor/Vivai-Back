@@ -37,8 +37,8 @@ def getIntention(sentence):
     
     intentions = load('intentions.joblib')
 	
-	score = clf_svm.predict_proba([vector])
-	intention_score = score[0][int(p[0])]
+    score = clf_svm.predict_proba([vector])
+    intention_score = score[0][int(p[0])]
 	
     return(intentions[int(p[0])])
 
