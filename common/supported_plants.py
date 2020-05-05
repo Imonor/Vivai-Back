@@ -42,7 +42,7 @@ def get_supported_plants(event, context):
         supported_plants = db_dealer.get_all_items(db_dealer.SUPPORTED_PLANT_TABLE)
         for plant in supported_plants:
             plant["species"] = plant["species"]["S"]
-            plant["websiteUrl"] = plant["websiteUrl"]["S"]
+            plant.pop("websiteUrl")
 
         return utilities.generate_http_response(supported_plants), 200
 
