@@ -39,8 +39,9 @@ def getIntention(sentence):
 	
     score = clf_svm.predict_proba([vector])
     intention_score = score[0][int(p[0])]
-	
-    return(intentions[int(p[0])])
+
+    print("SCORE="+intention_score)
+    print("INTENTION="+intentions[int(p[0])])	
 
 def identifyWantedPlant(plant_list, sentence):
     # plant_list composed of the species and nicknames of the possessed plants
@@ -49,11 +50,12 @@ def identifyWantedPlant(plant_list, sentence):
     for count,name in enumerate(plant_list):
         if re.findall(name.lower(), sentence):
             # if found, returns the position in the given list
-            return count
-    return -1
+            print("PLANT_NAME="+name)
+            return
+    return
 
 def main():
-    print("hello world!")
+   getIntention("j'aimerais arroser ma plante !")
 
 if __name__ == "__main__":
     main()
