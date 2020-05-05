@@ -1,8 +1,20 @@
 # -*- coding: utf-8 -*-
 
 import spacy
-from joblib import load
+from joblib import dump,load
+from flask import Flask, json, request
 import re
+
+api = Flask(__name__)
+
+@api.route('/', methods=['GET'])
+def get_intention():
+  if 'q' in request.args:
+     query = request.args.get('q')
+     intention = getIntention(query)
+     return json.dumps([{"response": "success", "results": intention, "plant": "basilic"}])
+  else:
+     return json.dumps([{"response": "error"}])
 
 def getIntention(sentence):
     
@@ -11,8 +23,6 @@ def getIntention(sentence):
     
     # Pre-processing
     sentence = sentence.lower()
-
-    nlp_fr = spacy.load('fr_core_news_sm')
     tokens = nlp_fr(sentence)
 
     words = []
@@ -40,8 +50,7 @@ def getIntention(sentence):
     score = clf_svm.predict_proba([vector])
     intention_score = score[0][int(p[0])]
 
-    print("SCORE="+str(intention_score))
-    print("INTENTION="+intentions[int(p[0])])	
+    return [intentions[int(p[0])], intention_score]
 
 def identifyWantedPlant(plant_list, sentence):
     # plant_list composed of the species and nicknames of the possessed plants
@@ -54,8 +63,6 @@ def identifyWantedPlant(plant_list, sentence):
             return
     return
 
-def main():
-   getIntention("j'aimerais arroser ma plante !")
-
 if __name__ == "__main__":
-    main()
+   nlp_fr = spacy.load('fr_core_news_sm') 
+   api.run(host='0.0.0.0', port=5000)
