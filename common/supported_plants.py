@@ -4,6 +4,10 @@ from botocore.exceptions import ClientError
 
 import common.utilities as utilities
 import common.db_dealer as db_dealer
+from plant_info.plant_info.spiders.plant_info_spider import PlantInfoSpider
+from scrapy.crawler import CrawlerProcess
+from scrapy.settings import Settings
+from scrapy.utils.project import get_project_settings
 
 PARAM_SEARCH = "search"
 PARAM_SPECIES = "species"
@@ -19,12 +23,15 @@ def get_plant_infos(species):
         # Espèce de plante non renseignée dans la table informative
         if not item:
             # Code pour le web-scrapping
-            
+            process = CrawlerProcess(get_project_settings())
+            process.crawl('plantInfo', url='https://jardinage.ooreka.fr/plante/voir/16/basilic')
+            process.start() # the script will block here until the crawling is finished
+
             # Ajout de la plante dans la table informative et retour de son ID.
+            
             # res_add = plant_services.add_plant(attributes)
             # return utilities.generate_http_response(res_add["generatedFields"][0]["longValue"])
             
-            # Pour l'instant, web-scrapping non implémenté.
             return item
 
         # Espèce déjà renseignée dans la table informative
