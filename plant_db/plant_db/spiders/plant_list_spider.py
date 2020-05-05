@@ -37,15 +37,10 @@ class PlantListSpider(scrapy.Spider):
 
     def parse(self, response):
         
-        i = 0
         for plant in response.css('div.info_plante'):
             url = plant.css('a.titre_liste_plante::attr(href)').get()
             species = plant.css('a.titre_liste_plante::text').get()
-            yield {
-                i : "{ \"species\": {\"S\": " + species + "}, \"websiteUrl\": {\"S\": https://jardinage.ooreka.fr"+ url + "} }"
-            }
-            i = i + 1
-
+            yield { "species": {"S":  species}, "websiteUrl": {"S": "https://jardinage.ooreka.fr"+ url}}
                 # next_page = /page-{}/ where {} number of page.
         next_page_short = response.xpath('//*[@id="plant-search-result"]/div[21]/div[3]/a/@href').extract_first()
 
