@@ -9,6 +9,10 @@ from plant_info.plant_info.spiders.plant_info_spider import PlantInfoSpider
 
 import common.utilities as utilities
 import common.db_dealer as db_dealer
+from plant_info.plant_info.spiders.plant_info_spider import PlantInfoSpider
+from scrapy.crawler import CrawlerProcess
+from scrapy.settings import Settings
+from scrapy.utils.project import get_project_settings 
 
 PARAM_SPECIES = "species"
 
@@ -25,9 +29,9 @@ def get_plant_infos(species):
             url = db_dealer.get_item(db_dealer.SUPPORTED_PLANT_TABLE, species, "","", ["websiteUrl"])["websiteUrl"]["S"]
 
             # Code pour le web-scrapping
-            #process = CrawlerProcess(get_project_settings())
-            #process.crawl('plantInfo', url=url)
-            #process.start()
+            process = CrawlerProcess(get_project_settings())
+            process.crawl('plantInfo', url=url)
+            process.start()
 
             # Ajout de la plante dans la table informative et retour de son ID.
             
