@@ -3,13 +3,16 @@
 from botocore.exceptions import ClientError
 
 import common.utilities as utilities
+import common.plant_services as plant_services
 import common.db_dealer as db_dealer
 from plant_info.plant_info.spiders.plant_info_spider import PlantInfoSpider
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
 from scrapy.utils.project import get_project_settings
+from scrapy import signals
+from scrapy.crawler import Crawler, CrawlerProcess
 
-PARAM_SEARCH = "search"
+
 PARAM_SPECIES = "species"
 
 def get_plant_infos(species):
@@ -22,17 +25,25 @@ def get_plant_infos(species):
 
         # Espèce de plante non renseignée dans la table informative
         if not item:
-            # Code pour le web-scrapping
-            process = CrawlerProcess(get_project_settings())
-            process.crawl('plantInfo', url='https://jardinage.ooreka.fr/plante/voir/16/basilic')
-            process.start() # the script will block here until the crawling is finished
+            # Code pour le web-scrapping : 
+            returned_url = db_dealer.get_item(db_dealer.SUPPORTED_PLANT_TABLE, species, "","", ["websiteUrl"])["websiteUrl"]["S"]
 
+            items = []
+            def collect_items(item, response, spider):
+                items.append(item)
+
+            crawler = Crawler(PlantInfoSpider)
+            crawler.signals.connect(collect_items, signals.item_scraped)
+            process = CrawlerProcess()
+            process.crawl(crawler, url= returned_url)  
+            process.start()
+            items = items[0]
+            picUrl = items.get('picUrl')
             # Ajout de la plante dans la table informative et retour de son ID.
             
-            # res_add = plant_services.add_plant(attributes)
-            # return utilities.generate_http_response(res_add["generatedFields"][0]["longValue"])
+            plant_id = plant_services.add_plant(items)
             
-            return item
+            return plant_id, picUrl
 
         # Espèce déjà renseignée dans la table informative
         

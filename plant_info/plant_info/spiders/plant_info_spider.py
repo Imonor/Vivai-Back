@@ -24,6 +24,4 @@ class PlantInfoSpider(scrapy.Spider):
             'growth': re.sub('\s+', '', response.xpath('//*[@id="resume_plante"]/div[3]/ul/li[3]/div/span/text()')[0].get()),
             'coldResistance': re.sub('\s+', '', response.xpath('//*[@id="resume_plante"]/div[3]/ul/li[5]/div/span/text()')[1].get()),
             'sunNeed': re.sub('\s+', '', response.xpath('//*[@id="resume_plante"]/div[4]/ul/li[1]/div/div/text()')[1].get()),
-            'soilType': re.sub('\s+', '', response.xpath('//*[@id="resume_plante"]/div[3]/ul/li[6]/div/span/text()').get()),
-            'soilHumidity': re.sub('\s+', '', response.xpath('//*[@id="resume_plante"]/div[3]/ul/li[8]/div/span/text()').get()),
         }
