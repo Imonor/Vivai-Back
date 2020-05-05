@@ -31,7 +31,7 @@ def get_plant_infos(species):
             # Code pour le web-scrapping
             process = CrawlerProcess(get_project_settings())
             process.crawl('plantInfo', url=url)
-            process.start()
+            process.start() 
 
             # Ajout de la plante dans la table informative et retour de son ID.
             
