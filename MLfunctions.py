@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import spacy
-
 from joblib import load
-
 import re
-
+import unidecode
 
 def getIntention(sentence):
     
@@ -43,11 +41,11 @@ def getIntention(sentence):
 
 def identifyWantedPlant(plant_list, sentence):
     # plant_list composed of the species and nicknames of the possessed plants
-    
-    sentence = sentence.lower() 
-    
+
+    sentence = unidecode.unidecode(sentence.lower())
+
     for count,name in enumerate(plant_list):
-        if re.findall(name.lower(), sentence):
+        if re.findall(unidecode.unidecode(name.lower()), sentence):
             # if found, returns the position in the given list
             return count
     return -1
