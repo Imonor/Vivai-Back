@@ -7,6 +7,7 @@ import common.supported_plants as supported_plants
 import common.plant_services as plant_services
 import common.user_plant as user_plant
 import common.reporting as reporting
+import common.lila as lila
 
 APP = Flask(__name__)
 APP.debug = True
@@ -107,3 +108,11 @@ def update_plant():
     env = get_lambda_event_and_context()
     body, status = plant_services.update_plant(env["event"], env["context"])
     return make_response(body, status)
+
+@APP.route("/app/getLilaResponse", methods=["GET"])
+def get_lila_response():
+    """Returns Lila response to question"""
+    env = get_lambda_event_and_context()
+    body, status = lila.get_lila_response(env["event"], env["context"])
+    return make_response(body, status)
+    
