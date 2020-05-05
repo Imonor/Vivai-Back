@@ -37,6 +37,8 @@ def update_plant(event, context):
                                                     PARAM_PLANT_LOCATION, PARAM_PLANT_TEMP,
                                                     PARAM_PLANT_SUNEXPO, PARAM_PLANT_SHARED], [])
         
+        parameters[PARAM_PLANT_SHARED] = (parameters[PARAM_PLANT_SHARED].lower() == "true")
+        
         db_dealer.update_item(db_dealer.USER_PLANT_TABLE, parameters)
 
         return utilities.generate_http_response({"Message": "Update success"}), 200
@@ -120,8 +122,7 @@ def insert_user_plant(event, context):
             if not parameters[PARAM_PLANT_SUNEXPO]:
                 parameters[PARAM_PLANT_SUNEXPO] = None
     
-            if not parameters[PARAM_PLANT_SHARED]:
-                parameters[PARAM_PLANT_SHARED] = False
+            parameters[PARAM_PLANT_SHARED] = (parameters[PARAM_PLANT_SHARED].lower() == "true")
 
             parameters["plantId"] = plant_id
             parameters["picUrl"] = picUrl

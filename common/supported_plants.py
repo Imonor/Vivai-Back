@@ -19,20 +19,20 @@ def get_plant_infos(species):
         if not item:
             url = db_dealer.get_item(db_dealer.SUPPORTED_PLANT_TABLE, species, "","", ["websiteUrl"])["websiteUrl"]["S"]
             # Code pour le web-scrapping
-            
+
             # Ajout de la plante dans la table informative et retour de son ID.
             # res_add = plant_services.add_plant(attributes)
             # return utilities.generate_http_response(res_add["generatedFields"][0]["longValue"])
-            
+
             # Pour l'instant, web-scrapping non implémenté.
 
             #return item_id, picUrl
-            return item
+            return None, None
 
         # Espèce déjà renseignée dans la table informative
-        
+
         return item["id"]["S"], item["picUrl"]["S"]
-        
+
     except ClientError as error:
         raise error
 
