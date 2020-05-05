@@ -40,7 +40,7 @@ def getIntention(sentence):
     score = clf_svm.predict_proba([vector])
     intention_score = score[0][int(p[0])]
 
-    print("SCORE="+intention_score)
+    print("SCORE="+str(intention_score))
     print("INTENTION="+intentions[int(p[0])])	
 
 def identifyWantedPlant(plant_list, sentence):
