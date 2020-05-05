@@ -9,9 +9,6 @@ from plant_info.plant_info.spiders.plant_info_spider import PlantInfoSpider
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
 from scrapy.utils.project import get_project_settings
-from scrapy import signals
-from scrapy.crawler import Crawler, CrawlerProcess
-
 
 PARAM_SPECIES = "species"
 
