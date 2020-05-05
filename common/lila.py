@@ -11,7 +11,7 @@ PARAM_USER_ID = "userId"
 
 def soleil(species): 
     sun = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["sunNeed"], "species", "=", species)
-    if sun == "Soleil":
+    if sun == "Soleil": 
         return f'Votre {species} à besoin de {sun}.'
     elif sun == "Ombre":
         return f'Il est conseillé de mettre votre {species} à l\'{sun}. Il ne faudrait pas faire une insolation...'
@@ -55,17 +55,17 @@ def cadeaux(species):
 
 
 switcher = {
-    0: arrosage,
-    1: soleil,
+    "arrosage": arrosage,
+    "soleil": soleil,
     # 2: tailler, 
-    3: temperature, 
+    "temperature": temperature, 
     # 4: utilisation, 
-    5: entretien, 
-    6: cadeaux, 
+    "entretien": entretien, 
+    "cadeaux": cadeaux, 
     # 7: varietes, 
     # 8: planter, 
     # 9: maladies, 
-    10: hauteur
+    "hauteur": hauteur
 }
 
 def get_lila_response(event, context):
