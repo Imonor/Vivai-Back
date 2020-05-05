@@ -2,13 +2,14 @@
 
 from botocore.exceptions import ClientError
 
+import requests
 import common.utilities as utilities
 import common.db_dealer as db_dealer
 
 PARAM_LILA_REQUEST = "lilaRequest"
 PARAM_USER_ID = "userId"
 
-def soleil(species):
+def soleil(species): 
     sun = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["sunNeed"], "species", "=", species)
     if sun == "Soleil":
         return f'Votre {species} à besoin de {sun}.'
@@ -72,12 +73,15 @@ def get_lila_response(event, context):
         parameters = utilities.get_parameters(event, [PARAM_LILA_REQUEST, PARAM_USER_ID], [])
         # lila_request = parameters[PARAM_LILA_REQUEST]
         user_id = parameters[PARAM_USER_ID]
+        lila_request = parameters[PARAM_LILA_REQUEST]
 
         # Appel de l'API ML avec retour de l'intention, du score, de l'espèce.
+        parameters = {"q" : lila_request}
+        response = requests.get("http://todoo.xyz:5000/", params = parameters).json()[0]
 
-        intention = 10
-        score = 0.6
-        species = None
+        intention = response["results"][0]
+        score = response["results"][1]
+        species = response["plant"]
 
         # Score inférieur à 50%
         if score < 0.5:
