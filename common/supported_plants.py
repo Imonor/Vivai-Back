@@ -8,7 +8,12 @@ import common.db_dealer as db_dealer
 from plant_info.plant_info.spiders.plant_info_spider import PlantInfoSpider
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
+from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
+from plant_info.plant_info.spiders.plant_info_spider import PlantInfoSpider
+
+import common.utilities as utilities
+import common.db_dealer as db_dealer
 
 PARAM_SPECIES = "species"
 
