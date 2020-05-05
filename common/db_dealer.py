@@ -17,7 +17,7 @@ REPORTING_TABLE = "Reporting"
 def get_all_items(table):
     """Returns all items from a table"""
     try:
-        response = DYNAMODB_CLIENT.scan(TableName=table, Select='ALL_ATTRIBUTES', Limit=5)
+        response = DYNAMODB_CLIENT.scan(TableName=table, Select='ALL_ATTRIBUTES')
         return response["Items"]
     except ClientError as error:
         raise error
