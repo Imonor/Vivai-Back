@@ -5,7 +5,6 @@ from botocore.exceptions import ClientError
 import common.utilities as utilities
 import common.db_dealer as db_dealer
 
-PARAM_SEARCH = "search"
 PARAM_SPECIES = "species"
 
 def get_plant_infos(species):
@@ -18,6 +17,7 @@ def get_plant_infos(species):
 
         # Espèce de plante non renseignée dans la table informative
         if not item:
+            url = db_dealer.get_item(db_dealer.SUPPORTED_PLANT_TABLE, species, "","", ["websiteUrl"])["websiteUrl"]["S"]
             # Code pour le web-scrapping
             
             # Ajout de la plante dans la table informative et retour de son ID.
@@ -25,6 +25,8 @@ def get_plant_infos(species):
             # return utilities.generate_http_response(res_add["generatedFields"][0]["longValue"])
             
             # Pour l'instant, web-scrapping non implémenté.
+
+            #return item_id, picUrl
             return item
 
         # Espèce déjà renseignée dans la table informative

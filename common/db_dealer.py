@@ -12,7 +12,6 @@ DYNAMODB_CLIENT = boto3.client('dynamodb', 'eu-west-1')
 SUPPORTED_PLANT_TABLE = "SupportedPlant"
 PLANT_TABLE = "Plant"
 USER_PLANT_TABLE = "UserPlant"
-PLANT_TABLE = "Plant"
 REPORTING_TABLE = "Reporting"
 
 def get_all_items(table):
@@ -92,11 +91,11 @@ def get_attributes(table, attributes, condition_param, condition_op, condition_v
 
     try:
         if attributes:
-            response = DYNAMODB_CLIENT.scan(TableName=table, Select="SPECIFIC_ATTRIBUTES", Limit=1,
+            response = DYNAMODB_CLIENT.scan(TableName=table, Select="SPECIFIC_ATTRIBUTES",
                                             ProjectionExpression=", ".join(attributes), FilterExpression=condition,
                                             ExpressionAttributeValues=expr_attr_value)
         else:
-            response = DYNAMODB_CLIENT.scan(TableName=table, Limit=1, FilterExpression=condition,
+            response = DYNAMODB_CLIENT.scan(TableName=table, FilterExpression=condition,
                                             ExpressionAttributeValues=expr_attr_value)
 
         if response["Items"]:
@@ -122,7 +121,11 @@ def list_items(table, key_param, key_value):
 def get_item(table, item_id, other_id_param, other_id_value, attributes):
     """Returns the item with the given id
        If parameter 'attributes' is empty, returns all the item's attributes"""
-    key = {"id": {"S": item_id}}
+
+    if table == SUPPORTED_PLANT_TABLE:
+        key = {"species": {"S": item_id}}
+    else:
+        key = {"id": {"S": item_id}}
 
     if other_id_param and other_id_value:
         key[other_id_param] = {"S": other_id_value}
