@@ -11,7 +11,7 @@ PARAM_LILA_REQUEST = "lilaRequest"
 PARAM_USER_ID = "userId"
 
 def soleil(species): 
-    sun = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["sunNeed"], "species", "=", species)
+    sun = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["sunNeed"], "species", "=", species)["sunNeed"]["S"]
     if sun == "Soleil": 
         return f'Votre {species} à besoin de {sun}.'
     elif sun == "Ombre":
@@ -20,7 +20,7 @@ def soleil(species):
         return f'Votre {species} préfère vivre dans un environnement ombragé.'
 
 def arrosage(species):
-    arr = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["waterNeed"], "species", "=", species)
+    arr = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["waterNeed"], "species", "=", species)["waterNeed"]["S"]
     if arr == "Moyen":
         return f'Votre {species} a besoin d\'une quantité d\'eau normale. Arrosez 2 à 3 fois par semaine.'
     elif arr == "Faible":
@@ -30,7 +30,7 @@ def arrosage(species):
             En extérieur, vous devez lui apporter de l\'eau abondamment et régulièrement.'
 
 def temperature(species):
-    cold = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["coldResistance"], "species", "=", species)
+    cold = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["coldResistance"], "species", "=", species)["coldResistance"]["S"]
     if cold == "Fragile":
         return f'Votre {species} est très fragile et supporte mal le froid. Placez votre plante dans un environnement assez chaud. ' + soleil(species)
     elif cold == "Moyenne":
@@ -40,7 +40,7 @@ def temperature(species):
         return f'Votre {species} résiste au gel ! Rien ne lui fait peur ! ' + soleil(species)
 
 def entretien(species):
-    ent = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["careLevel"], "species", "=", species)
+    ent = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["careLevel"], "species", "=", species)["careLevel"]["S"]
     if ent == "Facile":
         return f'Ne vous inquiétez pas, votre {species} n\'a pas énormément besoin de vous. Vérifier son état une fois par semaine devrait suffire.'
     elif ent == "Modéré":
@@ -56,36 +56,55 @@ def cadeaux(species):
     return f'Cette idée est une très bonne idée ! Votre {species} fera forcément plaisir !'
 
 def maladies(species):
-    return db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["pest"], "species", "=", species)
+    return db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["pest"], "species", "=", species)["pest"]["S"]
 
 def planter(species):
-    plantation_months = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["plantationMonths"], "species", "=", species)
-    where_to_plant = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["whereToPlant"], "species", "=", species)
-    return f'{where_to_plant} Pour une meilleure pousse, il est préférable de planter votre {species} de \
-        {plantation_months[0]} à {plantation_months[len(plantation_months) - 1]}'
+    plant = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["plantationMonths", "whereToPlant"], "species", "=", species)
+    response = ""
+    if "whereToPlant" in plant:
+        response = plant["whereToPlant"]["S"]
+
+    response += f' Pour une meilleure pousse, il est préférable de planter votre {species} de \
+        {plant["plantationMonths"]["SS"][0]} à {plant["plantationMonths"]["SS"][-1]}'
+    return response
 
 def anecdote(species):
-    ecological_tips = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["ecologicalTips"], "species", "=", species)
-    history = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["history"], "species", "=", species)
-    if not ecological_tips and not history:
+    plant = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["ecologicalTips", "history"], "species", "=", species)
+    if not plant:
         return f'Je n\'ai aucune anecdote à raconter sur votre {species}...'
-    else:
-        return f'Mmh oui j\'ai quelques anecdotes en stock pour votre {species} ! \
-            {random.choice(ecological_tips)} {random.choice(history)}' 
+    
+    response = f'Mmh oui j\'ai quelques anecdotes en stock pour votre {species} !'
 
-switcher = {
+    if "ecologicalTips" in plant:
+        response += random.choice(plant["ecologicalTips"]["SS"])
+    if "history" in plant:
+        response += random.choice(plant["history"]["SS"])
+
+    return response
+
+
+def varietes(species):
+    return ("Je n'ai pas compris ta question...")
+
+def tailler(species):
+    return ("Je n'ai pas compris ta question...")
+
+def utilisation(species):
+    return ("Je n'ai pas compris ta question...")
+
+SWITCHER = {
     "arrosage": arrosage,
     "soleil": soleil,
-    # 2: tailler, 
+    "tailler": tailler, 
     "temperature": temperature, 
-    # 4: utilisation, 
+    "utilisation": utilisation, 
     "entretien": entretien, 
     "cadeaux": cadeaux, 
-    # 7: varietes, 
-    "planter": planter, 
+    "varietes": varietes,
+    "planter": planter,
     "maladies": maladies, 
     "hauteur": hauteur,
-    "anecdote": anecdote
+    "anecdotes": anecdote
 }
 
 def get_lila_response(event, context):
@@ -102,8 +121,8 @@ def get_lila_response(event, context):
         score = response["results"][1]
         species = response["plant"]
 
-        # Score inférieur à 50%
-        if score < 0.7:
+        # Score inférieur à 10%
+        if score < 0.1:
             return utilities.generate_http_response({"Response": "Je n'ai pas compris ta question. Articule s'il te plaît."}), 200
 
         # Si l'espèce est nulle
@@ -114,7 +133,7 @@ def get_lila_response(event, context):
                 raise error
 
         try:
-            response = switcher[intention](species)
+            response = SWITCHER[intention](species)
         except ClientError as error:
             raise error
 

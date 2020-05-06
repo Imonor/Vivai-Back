@@ -1,5 +1,7 @@
 """File containing services for Supported Plants"""
 
+from multiprocessing import Process, Manager
+
 from botocore.exceptions import ClientError
 
 
@@ -8,8 +10,13 @@ import common.plant_services as plant_services
 import common.db_dealer as db_dealer
 
 from scrapy import signals
-from scrapy.crawler import Crawler, CrawlerProcess
 from plant_info.plant_info.spiders.plant_info_spider import PlantInfoSpider
+
+
+import scrapy.crawler as crawler
+from twisted.internet import reactor
+
+from scrapy.signalmanager import dispatcher
 
 PARAM_SPECIES = "species"
 
@@ -23,25 +30,34 @@ def get_plant_infos(species):
 
         # Espèce de plante non renseignée dans la table informative
         if not item:
-            # Code pour le web-scrapping : 
+                       
             returned_url = db_dealer.get_item(db_dealer.SUPPORTED_PLANT_TABLE, species, "","", ["websiteUrl"])["websiteUrl"]["S"]
+            
+            def f(return_list):
+                def collect_items(signal, sender, item, response, spider):
+                    return_list.append(item)
+                dispatcher.connect(collect_items, signal=signals.item_passed)
+                runner = crawler.CrawlerRunner()
+                deferred = runner.crawl(PlantInfoSpider, url=returned_url)
+                deferred.addBoth(lambda _: reactor.stop())
+                reactor.run()
 
-            items = []
-            def collect_items(item, response, spider):
-                items.append(item)
+            manager = Manager()
+            return_list = manager.list()
+            p = Process(target=f, args=(return_list,))
+            p.start()
+            p.join()
 
-            crawler = Crawler(PlantInfoSpider)
-            crawler.signals.connect(collect_items, signals.item_scraped)
-            process = CrawlerProcess()
-            process.crawl(crawler, url= returned_url)  
-            process.start()
-            items = items[0]
+            items = return_list[0]
             picUrl = items.get('picUrl')
             # Ajout de la plante dans la table informative et retour de son ID.
 
-            plant_id = plant_services.add_plant(items)
+            try:
+                plant_id = plant_services.add_plant(items)
+                return plant_id, picUrl
 
-            return plant_id, picUrl
+            except ClientError as error:
+                raise error
 
         # Espèce déjà renseignée dans la table informative
 
