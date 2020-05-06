@@ -78,7 +78,32 @@ class PlantInfoSpider(scrapy.Spider):
             else :
                 return default
 
+        def where_test() :
+            default = ""
 
+            if any("Où" in s for s in response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[3]/div/h3[1]/text()').extract()) :
+                return response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[3]/div/h3[1]/following-sibling::p').extract()[0]
+            if any("Où" in s for s in response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[3]/div/h3[2]/text()').extract()) :
+                return response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[3]/div/h3[2]/following-sibling::p').extract()[0]
+            else :
+                return default
+
+        def pest_test() :
+            default = ""
+
+            if any("Maladies" in s for s in response.xpath('//*[@id="conseils-ecologiques"]/text()').extract()[0]) :
+                return response.xpath('//*[@id="conseils-ecologiques"]/following-sibling::p').extract()
+            else :
+                return default
+
+        def ecological_test() :
+            default = "HHH"
+
+            if any("Conseils" in s for s in response.xpath('//*[@id="conseils-ecologiques"]/text()').extract()) :
+                return data_clean('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[12]/div//p')
+                #('//*[@id="conseils-ecologiques"]/following-sibling::div')
+            else :
+                return default
         yield {
             'species' : response.xpath('//*[@id="fiches_plantes"]/h1/text()').get(),
             'picUrl' : response.xpath('//*[@id="image-0"]/a/img/@src').get(),
@@ -97,10 +122,11 @@ class PlantInfoSpider(scrapy.Spider):
             'sunNeed' : re.sub('\s+', '', response.xpath('//*[@id="resume_plante"]/div[4]/ul/li[1]/div/div/text()')[1].get()),
             'indoorUse' : indoor_test(),
             'outdoorUse' : outdoor_test(),
-            #'plantationMonths' : Avril, Mai, Juin, Julliet, Aout (list)
-            #'whereToPlant' : response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[3]/div/p[5]').extract()[0].replace('<p>','').replace('<strong>','').replace('</strong>','').replace('\n',' ').replace('</p>',''),
-            #'pest' :  re.sub('<[^>]+>', '', response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[9]/div/p[1]').getall()[0]),
-            #'ecologicalTips' : data_clean('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[12]/div//p'),
+            'whereToPlant' : where_test(),
+            #'pest' : pest_test(),
+            #'ecologicalTips' : ecological_test(),
+            'plantationMonths' : response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[4]/div[1]/table//td[@class="_selected1 selectionne"]/text()').extract(),
+            # data_clean('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[12]/div//p'),
             #'history' : data_clean('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[13]/div//p'),
         
         }
