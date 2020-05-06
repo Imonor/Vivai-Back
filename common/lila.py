@@ -71,7 +71,6 @@ switcher = {
 def get_lila_response(event, context):
     try:
         parameters = utilities.get_parameters(event, [PARAM_LILA_REQUEST, PARAM_USER_ID], [])
-        # lila_request = parameters[PARAM_LILA_REQUEST]
         user_id = parameters[PARAM_USER_ID]
         lila_request = parameters[PARAM_LILA_REQUEST]
 
