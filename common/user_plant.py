@@ -22,6 +22,7 @@ def get_shared_plants(event, context):
             if item["plantId"]["S"] == plant_id and item["shared"]["BOOL"] and item["userId"]["S"] != user_id:
                 plant = {
                     "id": item["id"]["S"],
+                    "picUrl": item["picUrl"]["S"],
                     "plantId": item["plantId"]["S"],
                     "userId": item["userId"]["S"],
                     "nickname": "NULL" if "NULL" in item["nickname"] else item["nickname"]["S"],
