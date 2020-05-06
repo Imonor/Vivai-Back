@@ -1,5 +1,6 @@
 """File for Machine Learning Services"""
 
+import random
 from botocore.exceptions import ClientError
 
 import requests
@@ -25,7 +26,8 @@ def arrosage(species):
     elif arr == "Faible":
         return f'Très peu d\'eau nécéssaire. Votre {species} semble être un·e descendant·e du cactus !'
     else:
-        return f'Votre {species} a soif ! On dirait Ilan au bar le vendredi soir...'
+        return f'Si votre {species} est à l\'intérieur, vous pouvez l\'arroser plusieurs fois par semaine. \
+            En extérieur, vous devez lui apporter de l\'eau abondamment et régulièrement.'
 
 def temperature(species):
     cold = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["coldResistance"], "species", "=", species)
@@ -51,10 +53,25 @@ def hauteur(species):
     return f'Votre {species} peut atteindre une hauteur de {height} à maturité !'
 
 def cadeaux(species):
-    return f' Cette idée est une très bonne idée ! Votre {species} fera forcément plaisir !'
+    return f'Cette idée est une très bonne idée ! Votre {species} fera forcément plaisir !'
 
 def maladies(species):
     return db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["pest"], "species", "=", species)
+
+def planter(species):
+    plantation_months = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["plantationMonths"], "species", "=", species)
+    where_to_plant = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["whereToPlant"], "species", "=", species)
+    return f'{where_to_plant} Pour une meilleure pousse, il est préférable de planter votre {species} de \
+        {plantation_months[0]} à {plantation_months[len(plantation_months) - 1]}'
+
+def anecdote(species):
+    ecological_tips = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["ecologicalTips"], "species", "=", species)
+    history = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["history"], "species", "=", species)
+    if not ecological_tips and not history:
+        return f'Je n\'ai aucune anecdote à raconter sur votre {species}...'
+    else:
+        return f'Mmh oui j\'ai quelques anecdotes en stock pour votre {species} ! \
+            {random.choice(ecological_tips)} {random.choice(history)}' 
 
 switcher = {
     "arrosage": arrosage,
@@ -65,9 +82,10 @@ switcher = {
     "entretien": entretien, 
     "cadeaux": cadeaux, 
     # 7: varietes, 
-    # 8: planter, 
+    "planter": planter, 
     "maladies": maladies, 
-    "hauteur": hauteur
+    "hauteur": hauteur,
+    "anecdote": anecdote
 }
 
 def get_lila_response(event, context):
@@ -86,7 +104,7 @@ def get_lila_response(event, context):
 
         # Score inférieur à 50%
         if score < 0.7:
-            return utilities.generate_http_response({"Reponse": "Je n'ai pas compris ta question. Articule s'il te plaît."}), 200
+            return utilities.generate_http_response({"Response": "Je n'ai pas compris ta question. Articule s'il te plaît."}), 200
 
         # Si l'espèce est nulle
         if species is None:

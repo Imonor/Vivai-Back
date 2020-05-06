@@ -116,3 +116,9 @@ def get_lila_response():
     body, status = lila.get_lila_response(env["event"], env["context"])
     return make_response(body, status)
     
+@APP.route("/app/getNotifications", methods=["GET"])
+def get_notifications():
+    """Returns plants not reported (today) for specified user"""
+    env = get_lambda_event_and_context()
+    body, status = user_plant.get_notifications(env["event"], env["context"])
+    return make_response(body, status)

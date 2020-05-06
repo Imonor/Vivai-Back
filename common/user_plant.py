@@ -1,5 +1,6 @@
 """File containing services for UserPlant"""
 
+from datetime import date
 from botocore.exceptions import ClientError
 
 import common.utilities as utilities
@@ -8,6 +9,23 @@ import common.db_dealer as db_dealer
 PARAM_USER_ID = "userId"
 PARAM_USER_PLANT_ID = "userPlantId"
 PARAM_PLANT_ID = "plantId"
+
+def get_notifications(event, context):
+    """Returns notification for reporting"""
+    try:
+        parameters = utilities.get_parameters(event, [PARAM_USER_ID], [])
+        user_id = parameters[PARAM_USER_ID]
+        items = db_dealer.list_items(db_dealer.USER_PLANT_TABLE, "userId", user_id)
+        notifs = []
+        for item in items:
+            report_item = db_dealer.get_item(db_dealer.REPORTING_TABLE, item["userPlantId"]["S"], "date", date.today(), [])
+            if not report_item:
+                notifs.append(item["species"]["S"])
+        return utilities.generate_http_response(notifs), 200
+
+    except (ClientError, utilities.MissingParameterException) as error:
+        return utilities.handle_error(error)
+
 
 def get_shared_plants(event, context):
     """Returns shared plants of given plantID"""

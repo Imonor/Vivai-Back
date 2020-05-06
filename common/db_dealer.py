@@ -127,6 +127,8 @@ def get_item(table, item_id, other_id_param, other_id_value, attributes):
 
     if table == SUPPORTED_PLANT_TABLE:
         key = {"species": {"S": item_id}}
+    elif table == REPORTING_TABLE:
+        key = {"userPlantId": {"S": item_id}}
     else:
         key = {"id": {"S": item_id}}
 
@@ -139,7 +141,7 @@ def get_item(table, item_id, other_id_param, other_id_value, attributes):
         else:    
             item = DYNAMODB_CLIENT.get_item(TableName=table, Key=key)
 
-        return item["Item"]
+        return item["Item"] if "Item" in item else None
 
     except ClientError as error:
         raise error
