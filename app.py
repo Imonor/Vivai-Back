@@ -100,3 +100,10 @@ def get_reportings():
     env = get_lambda_event_and_context()
     body, status = reporting.get_reportings(env["event"], env["context"])
     return make_response(body, status)
+    
+@APP.route("/app/updatePlant", methods=["PUT"])
+def update_plant():
+    """Updates plant object with userPlantId"""
+    env = get_lambda_event_and_context()
+    body, status = plant_services.update_plant(env["event"], env["context"])
+    return make_response(body, status)

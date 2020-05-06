@@ -2,6 +2,11 @@
 
 from botocore.exceptions import ClientError
 
+from scrapy.settings import Settings
+from scrapy.crawler import CrawlerProcess
+from scrapy.utils.project import get_project_settings
+from plant_info.plant_info.spiders.plant_info_spider import PlantInfoSpider
+
 import common.utilities as utilities
 import common.plant_services as plant_services
 import common.db_dealer as db_dealer
@@ -11,7 +16,6 @@ from scrapy.settings import Settings
 from scrapy.utils.project import get_project_settings
 from scrapy import signals
 from scrapy.crawler import Crawler, CrawlerProcess
-
 
 PARAM_SPECIES = "species"
 
@@ -25,7 +29,6 @@ def get_plant_infos(species):
 
         # Espèce de plante non renseignée dans la table informative
         if not item:
-            # Code pour le web-scrapping : 
             returned_url = db_dealer.get_item(db_dealer.SUPPORTED_PLANT_TABLE, species, "","", ["websiteUrl"])["websiteUrl"]["S"]
 
             items = []
@@ -46,9 +49,9 @@ def get_plant_infos(species):
             return plant_id, picUrl
 
         # Espèce déjà renseignée dans la table informative
-        
+
         return item["id"]["S"], item["picUrl"]["S"]
-        
+
     except ClientError as error:
         raise error
 
@@ -58,7 +61,7 @@ def get_supported_plants(event, context):
         supported_plants = db_dealer.get_all_items(db_dealer.SUPPORTED_PLANT_TABLE)
         for plant in supported_plants:
             plant["species"] = plant["species"]["S"]
-            plant["websiteUrl"] = plant["websiteUrl"]["S"]
+            plant.pop("websiteUrl")
 
         return utilities.generate_http_response(supported_plants), 200
 

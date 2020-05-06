@@ -29,6 +29,24 @@ PARAM_SUN_NEED = "sunNeed"
 PARAM_HEIGHT_MATURE = "heightMature"
 PARAM_WIDTH_MATURE = "widthMature"
 
+def update_plant(event, context):
+
+    try:
+     
+        parameters = utilities.get_parameters(event, [PARAM_USER_PLANT_ID, PARAM_USER_ID, PARAM_PLANT_NICKNAME, 
+                                                    PARAM_PLANT_LOCATION, PARAM_PLANT_TEMP,
+                                                    PARAM_PLANT_SUNEXPO, PARAM_PLANT_SHARED], [])
+        
+        parameters[PARAM_PLANT_SHARED] = (parameters[PARAM_PLANT_SHARED].lower() == "true")
+        
+        db_dealer.update_item(db_dealer.USER_PLANT_TABLE, parameters)
+
+        return utilities.generate_http_response({"Message": "Update success"}), 200
+
+    except (ClientError, utilities.MissingParameterException) as error:
+        return utilities.handle_error(error)
+
+
 def get_random_infos(event, context):
     try:
         lines = open('./common/anecdotes.txt').read().splitlines()
@@ -104,8 +122,7 @@ def insert_user_plant(event, context):
             if not parameters[PARAM_PLANT_SUNEXPO]:
                 parameters[PARAM_PLANT_SUNEXPO] = None
     
-            if not parameters[PARAM_PLANT_SHARED]:
-                parameters[PARAM_PLANT_SHARED] = False
+            parameters[PARAM_PLANT_SHARED] = (parameters[PARAM_PLANT_SHARED].lower() == "true")
 
             parameters["plantId"] = plant_id
             parameters["picUrl"] = picUrl

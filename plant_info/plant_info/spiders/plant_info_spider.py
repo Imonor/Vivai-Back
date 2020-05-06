@@ -24,4 +24,11 @@ class PlantInfoSpider(scrapy.Spider):
             'growth': re.sub('\s+', '', response.xpath('//*[@id="resume_plante"]/div[3]/ul/li[3]/div/span/text()')[0].get()),
             'coldResistance': re.sub('\s+', '', response.xpath('//*[@id="resume_plante"]/div[3]/ul/li[5]/div/span/text()')[1].get()),
             'sunNeed': re.sub('\s+', '', response.xpath('//*[@id="resume_plante"]/div[4]/ul/li[1]/div/div/text()')[1].get()),
+            'maintenance' : response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[7]//p').getall()[1],
+            'pest' : response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[8]/div/p').getall()[1],
+
+        
+        
+        
+        
         }

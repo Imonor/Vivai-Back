@@ -36,7 +36,7 @@ def add_reporting(event, context):
         return utilities.handle_error(error)
 
 def get_reportings(event, context):
-    """Returns the 7 last reportings for a given userPlant"""
+    """Returns the 6 last reportings for a given userPlant"""
     try:
         parameters = utilities.get_parameters(event, [PARAM_USER_PLANT_ID], [])
         user_plant_id = parameters[PARAM_USER_PLANT_ID]
@@ -44,11 +44,11 @@ def get_reportings(event, context):
         items = db_dealer.list_items(db_dealer.REPORTING_TABLE,"userPlantId", user_plant_id)
         items.sort(reverse=True, key=lambda dict: datetime.strptime(dict["date"]["S"], "%Y-%m-%d"))
 
-        if len(items) > 7:
-            items = items[:7]
+        if len(items) > 6:
+            items = items[:6]
 
         reports = []
-        for item in items:
+        for item in items[::-1]:
             report = {
                 "date": item["date"]["S"],
                 "water": item["water"]["BOOL"],

@@ -39,6 +39,7 @@ provider:
         - "dynamodb:DeleteItem"
         - "dynamodb:UpdateItem"
         - "dynamobd:BatchWriteItem"
+        - "dynamobd:UpdateItem"
       Resource: "*"
 
 
