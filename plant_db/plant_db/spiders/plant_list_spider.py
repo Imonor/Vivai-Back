@@ -47,5 +47,4 @@ class PlantListSpider(scrapy.Spider):
         # If next_page have value
         if next_page_short is not None:
             next_page =  "https://jardinage.ooreka.fr" + next_page_short
-            # Recall parse with url https://sanet.st/page-{}/ where {} number of page.
             yield scrapy.Request(url=next_page, callback=self.parse)
