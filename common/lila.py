@@ -42,7 +42,7 @@ def entretien(species):
     if ent == "Facile":
         return f'Ne vous inquiétez pas, votre {species} n\'a pas énormément besoin de vous. Vérifier son état une fois par semaine devrait suffire.'
     elif ent == "Modéré":
-        return f'Votre {species} a besoin d\'un peut d\'attention de votre part ! Pensez à vous occuper d\'elle 2 à 3 fois par semaine.'
+        return f'Votre {species} a besoin d\'un peu d\'attention de votre part ! Pensez à vous en occuper 2 à 3 fois par semaine.'
     else:
         return f'Vous feriez mieux de vous occuper de votre {species} comme d\'un bébé ! Pensez à vérifiez son état tous les jours.'
         
