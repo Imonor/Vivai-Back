@@ -43,16 +43,14 @@ def getIntention(sentence):
     tokens = nlp_fr(sentence)
 
     words = []
-    allowed_pos = ['VERB', 'NOUN', 'PROPN', 'ADJ']
     vectorizer = load('vectorizer.joblib')
                 
     # Lemmatize
     for token in tokens:
-        if ( allowed_pos.count(token.pos_) > 0 ):
-            if (token.lemma_ != 'plante' and token.lemma_ != 't'): 
-                words.append(str(token.lemma_))          
-            j = 0;
-            vector = vectorizer.get_feature_names()
+		if (token.lemma_ != 'plante' and token.lemma_ != 't'): 
+			words.append(str(token.lemma_))          
+		j = 0;
+		vector = vectorizer.get_feature_names()
 
     # Create vector
     for word in vector:
