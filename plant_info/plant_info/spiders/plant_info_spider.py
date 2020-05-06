@@ -118,15 +118,13 @@ class PlantInfoSpider(scrapy.Spider):
             'waterNeed' : re.sub('\s+', '', response.xpath('//*[@id="resume_plante"]/div[3]/ul/li[2]/div/span/text()')[1].get()),
             'growth' : re.sub('\s+', '', response.xpath('//*[@id="resume_plante"]/div[3]/ul/li[3]/div/span/text()')[0].get()),
             'coldResistance' : re.sub('\s+', '', response.xpath('//*[@id="resume_plante"]/div[3]/ul/li[5]/div/span/text()')[1].get()),
-            'soilType' : data_parse('//*[@id="resume_plante"]/div[3]/ul/li[6]/div//span/text()'),
+            #'soilType' : Sol argileux
             'sunNeed' : re.sub('\s+', '', response.xpath('//*[@id="resume_plante"]/div[4]/ul/li[1]/div/div/text()')[1].get()),
-            'indoorUse' : indoor_test(),
-            'outdoorUse' : outdoor_test(),
-            'whereToPlant' : where_test(),
-            #'pest' : pest_test(),
-            #'ecologicalTips' : ecological_test(),
-            'plantationMonths' : response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[4]/div[1]/table//td[@class="_selected1 selectionne"]/text()').extract(),
-            # data_clean('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[12]/div//p'),
-            #'history' : data_clean('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[13]/div//p'),
-        
+            #'indoorUse' : Véranda
+            #'outdoorUse' : Balcon ou terrasse
+            #'plantationMonths' : Avril, Mai, Juin, Julliet, Aout (list)
+            #'whereToPlant' : Plantez-le dans un gros 
+            # 'pest' : response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[8]/div/p').getall()[1],
+            #'ecologicalTips' : (null)
+            #'history' : (null) tableau avec un paragraphe par case
         }
