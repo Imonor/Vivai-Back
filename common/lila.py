@@ -83,7 +83,7 @@ def get_lila_response(event, context):
         species = response["plant"]
 
         # Score inférieur à 50%
-        if score < 0.5:
+        if score < 0.7:
             return utilities.generate_http_response({"Reponse": "Je n'ai pas compris ta question. Articule s'il te plaît."}), 200
 
         # Si l'espèce est nulle
