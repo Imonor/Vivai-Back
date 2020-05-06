@@ -7,9 +7,6 @@ provider:
   runtime: python3.7
   stage: dev
   region: eu-west-1
-  environment:
-    SECRET_ARN: ${file(configvariables.yml):SECRET_ARN}
-    RESOURCE_ARN: ${file(configvariables.yml):RESOURCE_ARN}
 
   iamRoleStatements:
     - Effect: "Allow"
