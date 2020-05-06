@@ -2,10 +2,6 @@
 
 from botocore.exceptions import ClientError
 
-from scrapy.settings import Settings
-from scrapy.crawler import CrawlerProcess
-from scrapy.utils.project import get_project_settings
-from plant_info.plant_info.spiders.plant_info_spider import PlantInfoSpider
 
 import common.utilities as utilities
 import common.plant_services as plant_services
@@ -17,13 +13,17 @@ from scrapy.utils.project import get_project_settings
 from scrapy import signals
 from scrapy.crawler import Crawler, CrawlerProcess
 
+from scrapy import signals
+from scrapy.crawler import Crawler, CrawlerProcess
+from plant_info.plant_info.spiders.plant_info_spider import PlantInfoSpider
+
 PARAM_SPECIES = "species"
 
 def get_plant_infos(species):
     """Checks if species parameter has completed infos in Plant table.
     If not it completes the plant infos by web-scrapping method and returns the plant ID.
     Else it returns the plant ID without web-scrapping"""
-    
+
     try:
         item = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["id", "picUrl"], "species", "=", species)
 
