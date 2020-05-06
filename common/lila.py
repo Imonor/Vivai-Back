@@ -59,10 +59,10 @@ def maladies(species):
     return db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["pest"], "species", "=", species)["pest"]["S"]
 
 def planter(species):
-    plant = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["plantationMonths", "whereToPlant"], "species", "=", species)
+    plant = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["plantationMonths", "soilType"], "species", "=", species)
     response = ""
-    if "whereToPlant" in plant:
-        response = plant["whereToPlant"]["S"]
+    if "soilType" in plant:
+        response = plant["soilType"]["S"]
 
     response += f' Pour une meilleure pousse, il est préférable de planter votre {species} de \
         {plant["plantationMonths"]["SS"][0]} à {plant["plantationMonths"]["SS"][-1]}'
@@ -127,10 +127,7 @@ def get_lila_response(event, context):
 
         # Si l'espèce est nulle
         if species is None:
-            try :
-                species = db_dealer.get_attributes(db_dealer.USER_PLANT_TABLE, ["species"], "userId", "=", user_id)["species"]["S"]
-            except ClientError as error:
-                raise error
+            return utilities.generate_http_response({"Response": "De quelle espèce parles-tu ?"}), 200
 
         try:
             response = SWITCHER[intention](species)
