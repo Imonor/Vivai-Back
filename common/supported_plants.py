@@ -6,7 +6,6 @@ from botocore.exceptions import ClientError
 import common.utilities as utilities
 import common.plant_services as plant_services
 import common.db_dealer as db_dealer
-from plant_info.plant_info.spiders.plant_info_spider import PlantInfoSpider
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
 from scrapy.utils.project import get_project_settings
