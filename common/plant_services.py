@@ -85,15 +85,15 @@ def get_plant_infos(event, context):
             "description": item["description"]["S"],
             "latinName": item["latinName"]["S"],
             "family": item["family"]["S"],
-            "type": item["type"]["S"],
-            "vegetation": item["vegetation"]["S"],
-            "height": item["height"]["S"],
+            "type": item["type"]["S"] if "type" in item else "NULL",
+            "vegetation": item["vegetation"]["S"] if "vegetation" in item else "NULL",
+            "height": item["height"]["S"] if "height" in item else "NULL",
             "width": item["width"]["S"] if "width" in item else "NULL",
             "careLevel": item["careLevel"]["S"],
             "waterNeed": item["waterNeed"]["S"],
             "growth": item["growth"]["S"],
             "coldResistance": item["coldResistance"]["S"],
-            "soilType": item["soilType"]["S"],
+            "soilType": item["soilType"]["S"] if "soilType" in item else "NULL",
             "sunNeed": item["sunNeed"]["S"],
             "indoorUse": item["indoorUse"]["S"] if "indoorUse" in item else "NULL",
             "outdoorUse": item["outdoorUse"]["S"] if "outdoorUse" in item else "NULL",
@@ -191,7 +191,8 @@ def add_plant(attributes):
 
         if isinstance(attributes[attr], str):
             attributes[attr] = re.sub(r'<[a-z/]*>', "", attributes[attr])
-            attributes[attr].replace("Lire la suite   --> ", "")
+            if "Lire la suite" in attributes[attr]:
+                attributes[attr] = attributes[attr].split("Lire la suite")[0]
 
     try:
         plant_id = db_dealer.insert_item(db_dealer.PLANT_TABLE, attributes)
