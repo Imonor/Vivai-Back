@@ -12,13 +12,14 @@ PARAM_PLANT_ID = "plantId"
 def get_shared_plants(event, context):
     """Returns shared plants of given plantID"""
     try:
-        parameters = utilities.get_parameters(event, [PARAM_PLANT_ID], [])
+        parameters = utilities.get_parameters(event, [PARAM_PLANT_ID, PARAM_USER_ID], [])
         plant_id = parameters[PARAM_PLANT_ID]
+        user_id = parameters[PARAM_USER_ID]
         items = db_dealer.get_all_items(db_dealer.USER_PLANT_TABLE)
 
         plants = []
         for item in items:
-            if item["plantId"]["S"] == plant_id and item["shared"]["BOOL"]:
+            if item["plantId"]["S"] == plant_id and item["shared"]["BOOL"] and item["userId"]["S"] != user_id:
                 plant = {
                     "id": item["id"]["S"],
                     "plantId": item["plantId"]["S"],
