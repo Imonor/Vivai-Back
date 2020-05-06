@@ -59,6 +59,9 @@ def insert_item(table, params):
             if params[param] is None:
                 item[param] = {"NULL": True}
 
+            elif isinstance(params[param], list):
+                item[param] = {"SS": params[param]}    
+
             elif isinstance(params[param], str):
                 item[param] = {"S": params[param]}
 

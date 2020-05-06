@@ -30,15 +30,14 @@ PARAM_HEIGHT_MATURE = "heightMature"
 PARAM_WIDTH_MATURE = "widthMature"
 
 def update_plant(event, context):
-
+    """Updates the given user plant"""
     try:
-     
         parameters = utilities.get_parameters(event, [PARAM_USER_PLANT_ID, PARAM_USER_ID, PARAM_PLANT_NICKNAME, 
                                                     PARAM_PLANT_LOCATION, PARAM_PLANT_TEMP,
                                                     PARAM_PLANT_SUNEXPO, PARAM_PLANT_SHARED], [])
-        
+
         parameters[PARAM_PLANT_SHARED] = (parameters[PARAM_PLANT_SHARED].lower() == "true")
-        
+
         db_dealer.update_item(db_dealer.USER_PLANT_TABLE, parameters)
 
         return utilities.generate_http_response({"Message": "Update success"}), 200
@@ -46,8 +45,8 @@ def update_plant(event, context):
     except (ClientError, utilities.MissingParameterException) as error:
         return utilities.handle_error(error)
 
-
 def get_random_infos(event, context):
+    """Returns a random info"""
     try:
         lines = open('./common/anecdotes.txt').read().splitlines()
         line = random.choice(lines)
@@ -80,20 +79,32 @@ def get_plant_infos(event, context):
         item = db_dealer.get_item(db_dealer.PLANT_TABLE, plant_id, "", "", [])
 
         response = {
-            "careLevel": item["careLevel"]["S"],
-            "coldResistance": item["coldResistance"]["S"],
-            "family": item["family"]["S"],
-            "growth": item["growth"]["S"],
-            "heightMature": item["heightMature"]["S"],
-            "picUrl": item["picUrl"]["S"],
             "species": item["species"]["S"],
-            "sunNeed": item["sunNeed"]["S"],
+            "picUrl": item["picUrl"]["S"],
+            "description": item["description"]["S"],
+            "latinName": item["latinName"]["S"],
+            "family": item["family"]["S"],
+            "type": item["type"]["S"],
+            "vegetation": item["vegetation"]["S"],
+            "height": item["height"]["S"],
+            "width": item["width"]["S"] if "width" in item else "NULL",
+            "careLevel": item["careLevel"]["S"],
             "waterNeed": item["waterNeed"]["S"],
-            "widthMature": item["widthMature"]["S"]
+            "growth": item["growth"]["S"],
+            "coldResistance": item["coldResistance"]["S"],
+            "soilType": item["soilType"]["S"],
+            "sunNeed": item["sunNeed"]["S"],
+            "indoorUse": item["indoorUse"]["S"] if "indoorUse" in item else "NULL",
+            "outdoorUse": item["outdoorUse"]["S"] if "outdoorUse" in item else "NULL",
+            "plantationMonths": item["plantationMonths"]["SS"],
+            "whereToPlant": item["whereToPlant"]["S"],
+            "pest": item["pest"]["S"],
+            "ecologicalTips": item["ecologicalTips"]["SS"] if "ecologicalTips" in item else [],
+            "history": item["history"]["SS"] if "outdoorUse" in item else []
         }
 
         return utilities.generate_http_response(response), 200
-    
+
     except (ClientError, utilities.MissingParameterException) as error:
         return utilities.handle_error(error)
 
@@ -107,21 +118,20 @@ def insert_user_plant(event, context):
 
         plant_id, picUrl = supported_plants.get_plant_infos(species)
 
-        
         if plant_id:
 
             if not parameters[PARAM_PLANT_NICKNAME]:
                 parameters[PARAM_PLANT_NICKNAME] = None
-    
+
             if not parameters[PARAM_PLANT_LOCATION]:
                 parameters[PARAM_PLANT_LOCATION] = None
-    
+
             if not parameters[PARAM_PLANT_TEMP]:
                 parameters[PARAM_PLANT_TEMP] = None
-    
+
             if not parameters[PARAM_PLANT_SUNEXPO]:
                 parameters[PARAM_PLANT_SUNEXPO] = None
-    
+
             parameters[PARAM_PLANT_SHARED] = (parameters[PARAM_PLANT_SHARED].lower() == "true")
 
             parameters["plantId"] = plant_id
@@ -133,11 +143,11 @@ def insert_user_plant(event, context):
                 "userPlantId": user_plant_id,
                 "plantId": plant_id
             }
-    
+
             return utilities.generate_http_response(response), 200
-        
+
         return utilities.generate_http_response({"Message": "Web-scrapping nécessaire"}), 501
-        
+
     except (ClientError, utilities.MissingParameterException) as error:
         return utilities.handle_error(error)
 
@@ -175,11 +185,7 @@ def add_plant(attributes):
         Returns the request response in case of success, raises an error otherwise"""
 
     try:
-        if PARAM_FAMILY not in attributes:
-            attributes[PARAM_FAMILY] = None
-
         plant_id = db_dealer.insert_item(db_dealer.PLANT_TABLE, attributes)
-
         return plant_id
 
     except ClientError as error:
