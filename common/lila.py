@@ -35,7 +35,7 @@ def temperature(species):
         return f'Votre {species} supporte assez bien le froid, vous pouvez placer votre plante dans une pièce à température ambiante \
             et la sortir par beau temps. ' + soleil(species)
     else:
-        return f'Votre {species} supporte toutes les températures ! Rien ne lui fait peur ! ' + soleil(species)
+        return f'Votre {species} résiste au gel ! Rien ne lui fait peur ! ' + soleil(species)
 
 def entretien(species):
     ent = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["careLevel"], "species", "=", species)
@@ -51,11 +51,10 @@ def hauteur(species):
     return f'Votre {species} peut atteindre une hauteur de {height} à maturité !'
 
 def cadeaux(species):
-    return f' Cette idée est une très bonne idée ! Un {species} fera forcément plaisir !'
+    return f' Cette idée est une très bonne idée ! Votre {species} fera forcément plaisir !'
 
 def maladies(species):
     return db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["pest"], "species", "=", species)
-
 
 switcher = {
     "arrosage": arrosage,
