@@ -29,7 +29,7 @@ class PlantInfoSpider(scrapy.Spider):
             for p  in items :
                 p = p.replace('\t','').replace('\n','')
                 if p :
-                    itemString = itemString + p
+                    itemString = itemString + "" + p
             return itemString
 
         def data_clean(xpathResponse) :
@@ -89,12 +89,12 @@ class PlantInfoSpider(scrapy.Spider):
                 return default
 
         def pest_test() :
-            default = ""
+            #default = ""
 
-            if any("Maladies" in s for s in response.xpath('//*[@id="conseils-ecologiques"]/text()').extract()[0]) :
-                return response.xpath('//*[@id="conseils-ecologiques"]/following-sibling::p').extract()
-            else :
-                return default
+            #if any("Maladies" in s for s in response.xpath('//*[@id="maladies-nuisibles-et-parasites"]/text()').extract()) :
+            return re.sub('<[^>]+>', '', response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/*[preceding-sibling::h2[contains(text(),\'Maladies, nuisibles et parasites\')]]').extract()[0]).replace('\t','').replace('\n',' ')
+            #else :
+            #    return default
 
         def ecological_test() :
             default = "HHH"
@@ -123,10 +123,10 @@ class PlantInfoSpider(scrapy.Spider):
             'indoorUse' : indoor_test(),
             'outdoorUse' : outdoor_test(),
             'whereToPlant' : where_test(),
-            #'pest' : pest_test(),
+            
             #'ecologicalTips' : ecological_test(),
             'plantationMonths' : response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[4]/div[1]/table//td[@class="_selected1 selectionne"]/text()').extract(),
             # data_clean('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[12]/div//p'),
             #'history' : data_clean('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[13]/div//p'),
-        
+            'pest' : pest_test(),
         }
