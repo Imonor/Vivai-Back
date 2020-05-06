@@ -1,6 +1,7 @@
 """File for Plant Services"""
 
 import random
+import re
 
 from botocore.exceptions import ClientError
 
@@ -84,23 +85,22 @@ def get_plant_infos(event, context):
             "description": item["description"]["S"],
             "latinName": item["latinName"]["S"],
             "family": item["family"]["S"],
-            # "type": item["type"]["S"],
-            # "vegetation": item["vegetation"]["S"],
-            # "height": item["height"]["S"],
-            # "width": item["width"]["S"] if "width" in item else "NULL",
+            "type": item["type"]["S"],
+            "vegetation": item["vegetation"]["S"],
+            "height": item["height"]["S"],
+            "width": item["width"]["S"] if "width" in item else "NULL",
             "careLevel": item["careLevel"]["S"],
             "waterNeed": item["waterNeed"]["S"],
             "growth": item["growth"]["S"],
             "coldResistance": item["coldResistance"]["S"],
-            # "soilType": item["soilType"]["S"],
+            "soilType": item["soilType"]["S"],
             "sunNeed": item["sunNeed"]["S"],
-            # "indoorUse": item["indoorUse"]["S"] if "indoorUse" in item else "NULL",
-            # "outdoorUse": item["outdoorUse"]["S"] if "outdoorUse" in item else "NULL",
+            "indoorUse": item["indoorUse"]["S"] if "indoorUse" in item else "NULL",
+            "outdoorUse": item["outdoorUse"]["S"] if "outdoorUse" in item else "NULL",
             "plantationMonths": item["plantationMonths"]["SS"] if "plantationMonths" in item else [],
-            "whereToPlant": item["whereToPlant"]["S"] if "whereToPlant" in item else "NULL",
             "pest": item["pest"]["S"] if "pest" in item else "NULL",
-            "ecologicalTips": item["ecologicalTips"]["SS"] if "ecologicalTips" in item else [],
-            "history": item["history"]["SS"] if "history" in item else []
+            "ecologicalTips": item["ecologicalTips"]["S"] if "ecologicalTips" in item else "NULL",
+            "history": item["history"]["S"] if "history" in item else "NULL"
         }
 
 
@@ -184,6 +184,14 @@ def get_list_plants_user(event, context):
 def add_plant(attributes):
     """ Adds a new plant in the Plant table ; 
         Returns the request response in case of success, raises an error otherwise"""
+
+    for attr in attributes:
+        if attributes[attr] == "":
+            attributes[attr] = "NULL"
+
+        if isinstance(attributes[attr], str):
+            attributes[attr] = re.sub(r'<[a-z/]*>', "", attributes[attr])
+            attributes[attr].replace("Lire la suite   --> ", "")
 
     try:
         plant_id = db_dealer.insert_item(db_dealer.PLANT_TABLE, attributes)
