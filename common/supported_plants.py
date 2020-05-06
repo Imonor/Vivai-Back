@@ -2,18 +2,11 @@
 
 from botocore.exceptions import ClientError
 
-
+from scrapy.crawler import Crawler, CrawlerProcess
+from scrapy import signals
 import common.utilities as utilities
 import common.plant_services as plant_services
 import common.db_dealer as db_dealer
-from scrapy.crawler import CrawlerProcess
-from scrapy.settings import Settings
-from scrapy.utils.project import get_project_settings
-from scrapy import signals
-from scrapy.crawler import Crawler, CrawlerProcess
-
-from scrapy import signals
-from scrapy.crawler import Crawler, CrawlerProcess
 from plant_info.plant_info.spiders.plant_info_spider import PlantInfoSpider
 
 PARAM_SPECIES = "species"
