@@ -51,7 +51,10 @@ def hauteur(species):
     return f'Votre {species} peut atteindre une hauteur de {height} à maturité !'
 
 def cadeaux(species):
-    return f' Cette idée est une très bonne idée ! Votre {species} fera forcément plaisir !'
+    return f' Cette idée est une très bonne idée ! Un {species} fera forcément plaisir !'
+
+def maladies(species):
+    return db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["pest"], "species", "=", species)
 
 
 switcher = {
@@ -64,7 +67,7 @@ switcher = {
     "cadeaux": cadeaux, 
     # 7: varietes, 
     # 8: planter, 
-    # 9: maladies, 
+    "maladies": maladies, 
     "hauteur": hauteur
 }
 
