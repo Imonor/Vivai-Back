@@ -30,7 +30,7 @@ def arrosage(species):
 def temperature(species):
     cold = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["coldResistance"], "species", "=", species)
     if cold == "Fragile":
-        return f'Votre {species} est très fragile et supporte mal le froid. Placez là dans un environnement assez chaud. ' + soleil(species)
+        return f'Votre {species} est très fragile et supporte mal le froid. Placez votre plante dans un environnement assez chaud. ' + soleil(species)
     elif cold == "Moyenne":
         return f'Votre {species} supporte assez bien le froid, vous pouvez la placez dans une pièce à température ambiante \
             et la sortir par beau temps. ' + soleil(species)
