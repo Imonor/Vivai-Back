@@ -23,7 +23,7 @@ def arrosage(species):
     if arr == "Moyen":
         return f'Votre {species} a besoin d\'une quantité d\'eau normale. Arrosez 2 à 3 fois par semaine.'
     elif arr == "Faible":
-        return f'Très peu d\'eau nécéssaire. Votre {species} semble être une descandant du cactus !'
+        return f'Très peu d\'eau nécéssaire. Votre {species} semble être un·e descendant·e du cactus !'
     else:
         return f'Votre {species} a soif ! On dirait Ilan au bar le vendredi soir...'
 
