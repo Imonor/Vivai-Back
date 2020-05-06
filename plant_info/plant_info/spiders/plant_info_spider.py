@@ -78,6 +78,7 @@ class PlantInfoSpider(scrapy.Spider):
             else :
                 return default
 
+
         yield {
             'species' : response.xpath('//*[@id="fiches_plantes"]/h1/text()').get(),
             'picUrl' : response.xpath('//*[@id="image-0"]/a/img/@src').get(),
