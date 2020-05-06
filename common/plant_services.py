@@ -103,6 +103,7 @@ def get_plant_infos(event, context):
             "history": item["history"]["SS"] if "history" in item else []
         }
 
+
         return utilities.generate_http_response(response), 200
 
     except (ClientError, utilities.MissingParameterException) as error:
