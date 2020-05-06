@@ -46,7 +46,7 @@ class PlantInfoSpider(scrapy.Spider):
             elif any("Hauteur" in s for s in response.xpath('//*[@id="resume_plante"]/div[2]/ul/li[6]/p/text()').extract()) :
                 return re.sub('<[^>]+>', '', response.xpath('//*[@id="resume_plante"]/div[2]/ul/li[6]/div/span').extract()[0]).strip('\n').strip('\t').strip('\n')
             elif any("Hauteur" in s for s in response.xpath('//*[@id="resume_plante"]/div[2]/ul/li[5]/p/text()').extract()) :
-                return re.sub('<[^>]+>', '', response.xpath('//*[@id="resume_plante"]/div[2]/ul/li[6]/div/span').extract()[0]).strip('\n').strip('\t').strip('\n')
+                return re.sub('<[^>]+>', '', response.xpath('//*[@id="resume_plante"]/div[2]/ul/li[5]/div/span').extract()[0]).strip('\n').strip('\t').strip('\n')
             else :
                 return default
 
