@@ -32,7 +32,7 @@ def temperature(species):
     if cold == "Fragile":
         return f'Votre {species} est très fragile et supporte mal le froid. Placez votre plante dans un environnement assez chaud. ' + soleil(species)
     elif cold == "Moyenne":
-        return f'Votre {species} supporte assez bien le froid, vous pouvez la placez dans une pièce à température ambiante \
+        return f'Votre {species} supporte assez bien le froid, vous pouvez placer votre plante dans une pièce à température ambiante \
             et la sortir par beau temps. ' + soleil(species)
     else:
         return f'Votre {species} supporte toutes les températures ! Rien ne lui fait peur ! ' + soleil(species)
