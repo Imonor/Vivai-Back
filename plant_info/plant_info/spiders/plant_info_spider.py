@@ -94,6 +94,8 @@ class PlantInfoSpider(scrapy.Spider):
         def ecological_test() :
             return re.sub('<[^>]+>', '', response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/*[preceding-sibling::h2[contains(text(),\'Conseils écologiques\')]]/div[1]').extract()[0]).replace('\t','').replace('\n',' ')
 
+        def history_test() :
+            return re.sub('<[^>]+>', '', response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/*[preceding-sibling::h2[contains(text(),\'Un peu\')]]').extract()[0]).replace('\t','').replace('\n',' ')
 
         yield {
             'species' : response.xpath('//*[@id="fiches_plantes"]/h1/text()').get(),
@@ -116,7 +118,7 @@ class PlantInfoSpider(scrapy.Spider):
             'whereToPlant' : where_test(),
             'plantationMonths' : response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[4]/div[1]/table//td[@class="_selected1 selectionne"]/text()').extract(),
             # data_clean('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[12]/div//p'),
-            #'history' : data_clean('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/div[13]/div//p'),
             'pest' : pest_test(),
             'ecologicalTips' : ecological_test(),
+            'history' : history_test(),
         }
