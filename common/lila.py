@@ -85,7 +85,7 @@ def get_lila_response(event, context):
 
         # Score inférieur à 50%
         if score < 0.5:
-            return utilities.generate_http_response({"Reponse": "Je n'ai pas compris ta question frérot. Articule s'il te plaît."}), 200
+            return utilities.generate_http_response({"Reponse": "Je n'ai pas compris ta question. Articule s'il te plaît."}), 200
 
         # Si l'espèce est nulle
         if species is None:
