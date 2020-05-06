@@ -40,7 +40,7 @@ def temperature(species):
 def entretien(species):
     ent = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["careLevel"], "species", "=", species)
     if ent == "Facile":
-        return f'Ne vous inquiétez pas, votre {species} n\a pas énormément besoin de vous. Vérifier son état une fois par semaine devrait suffir.'
+        return f'Ne vous inquiétez pas, votre {species} n\'a pas énormément besoin de vous. Vérifier son état une fois par semaine devrait suffire.'
     elif ent == "Modéré":
         return f'Votre {species} a besoin d\'un peut d\'attention de votre part ! Pensez à vous occuper d\'elle 2 à 3 fois par semaine.'
     else:
