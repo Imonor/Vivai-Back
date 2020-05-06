@@ -48,9 +48,10 @@ def getIntention(sentence):
     # Lemmatize
     for token in tokens:
         if (token.lemma_ != 'plante' and token.lemma_ != 't'): 
-            words.append(str(token.lemma_))          
-	    j = 0;
-        vector = vectorizer.get_feature_names()
+            words.append(str(token.lemma_))
+
+    j = 0;
+    vector = vectorizer.get_feature_names()
 
     # Create vector
     for word in vector:
