@@ -47,7 +47,7 @@ def entretien(species):
         return f'Vous feriez mieux de vous occuper de votre {species} comme d\'un bébé ! Pensez à vérifiez son état tous les jours.'
         
 def hauteur(species):
-    height = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["heightMature"], "species", "=", species)["heightMature"]["S"]
+    height = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["height"], "species", "=", species)["height"]["S"]
     return f'Votre {species} peut atteindre une hauteur de {height} à maturité !'
 
 def cadeaux(species):
