@@ -84,13 +84,13 @@ def anecdote(species):
 
 
 def varietes(species):
-    return ("Je n'ai pas compris ta question...")
+    return ("Je n'ai pas compris votre question...")
 
 def tailler(species):
-    return ("Je n'ai pas compris ta question...")
+    return ("Je n'ai pas compris votre question...")
 
 def utilisation(species):
-    return ("Je n'ai pas compris ta question...")
+    return ("Je n'ai pas compris votre question...")
 
 SWITCHER = {
     "arrosage": arrosage,
@@ -123,11 +123,11 @@ def get_lila_response(event, context):
 
         # Score inférieur à 10%
         if score < 0.1:
-            return utilities.generate_http_response({"Response": "Je n'ai pas compris ta question. Articule s'il te plaît."}), 200
+            return utilities.generate_http_response({"Response": "Je n'ai pas compris votre question... Pourriez-vous reformuler ?"}), 200
 
         # Si l'espèce est nulle
         if species is None:
-            return utilities.generate_http_response({"Response": "De quelle espèce parles-tu ?"}), 200
+            return utilities.generate_http_response({"Response": "De quelle espèce parlez-vous ?"}), 200
 
         try:
             response = SWITCHER[intention](species)
