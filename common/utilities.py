@@ -12,11 +12,11 @@ def handle_error(error):
     """Handles the given error"""
     if isinstance(error, ClientError):
         message = {"message": "Error - Unexpected " + error.response.get("Error").get("Code")}
-        return generate_http_response(message)
+        return generate_http_response(message), 500
     if isinstance(error, MissingParameterException):
-        return generate_http_response(error.response)
+        return generate_http_response(error.response), 400
     message = {"message": "Error: Unexpected error"}
-    return generate_http_response(message)
+    return generate_http_response(message), 500
 
 def get_parameters(event, required_parameters, optionnal_parameters):
     """Returns a dict containing the parameters of the event,
@@ -49,9 +49,9 @@ class MissingParameterException(Exception):
         super(MissingParameterException, self).__init__()
         self.missing_parameters = missing_parameters
         if len(missing_parameters) == 1:
-            self.message = "Parameter " + missing_parameters[0] + " is missing."
+            self.message = "Error: parameter " + missing_parameters[0] + " is missing."
         else:
-            self.message = "Parameters "
+            self.message = "Error: parameters "
             for param in missing_parameters:
                 self.message += param + ", "
             self.message = self.message[:-2] + " are missing."
