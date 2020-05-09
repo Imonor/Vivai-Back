@@ -13,18 +13,18 @@ PARAM_USER_ID = "userId"
 def soleil(species): 
     sun = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["sunNeed"], "species", "=", species)["sunNeed"]["S"]
     if sun == "Soleil": 
-        return f'Votre {species} à besoin de {sun}.'
+        return f'Votre {species} doit avoir du soleil direct toute la journée. En intérieur, c’est directement (moins d’1 m) devant une fenêtre orientée sud ou ouest.'
     elif sun == "Ombre":
-        return f'Il est conseillé de mettre votre {species} à l\'{sun}. Il ne faudrait pas faire une insolation...'
+        return f'Votre {species} doit être à l\'ombre d\'autres plantes. En intérieur, c’est le cas des pièces en hiver, des fenêtres au nord ou en partie occultées et quand la plante est loin de la fenêtre (+ de 2 m).'
     else:
-        return f'Votre {species} préfère vivre dans un environnement ombragé.'
+        return f'Votre {species}  doit avoir du soleil une partie de la journée seulement. En intérieur, c’est devant une fenêtre à l’est ou plus éloignée d’une fenêtre orientée sud ou ouest.'
 
 def arrosage(species):
     arr = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["waterNeed"], "species", "=", species)["waterNeed"]["S"]
     if arr == "Moyen":
         return f'Votre {species} a besoin d\'une quantité d\'eau normale. Arrosez 2 à 3 fois par semaine.'
     elif arr == "Faible":
-        return f'Très peu d\'eau nécéssaire. Votre {species} semble être un·e descendant·e du cactus !'
+        return f'Très peu d\'eau nécéssaire. Pour une plante d\'intérieur, arroser tous les mois. Pour une plante d\'extérieur, elle supporte bien la sécheresse.'
     else:
         return f'Si votre {species} est à l\'intérieur, vous pouvez l\'arroser plusieurs fois par semaine. \
             En extérieur, vous devez lui apporter de l\'eau abondamment et régulièrement.'
@@ -47,7 +47,7 @@ def entretien(species):
         return f'Votre {species} a besoin d\'un peu d\'attention de votre part ! Pensez à vous en occuper 2 à 3 fois par semaine.'
     else:
         return f'Vous feriez mieux de vous occuper de votre {species} comme d\'un bébé ! Pensez à vérifiez son état tous les jours.'
-        
+
 def hauteur(species):
     height = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["height"], "species", "=", species)["height"]["S"]
     return f'Votre {species} peut atteindre une hauteur de {height} à maturité !'
@@ -56,7 +56,11 @@ def cadeaux(species):
     return f'Cette idée est une très bonne idée ! Votre {species} fera forcément plaisir !'
 
 def maladies(species):
-    return db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["pest"], "species", "=", species)["pest"]["S"]
+    plant = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["pest"], "species", "=", species)
+    if "pest" in plant:
+        return plant["pest"]["S"]
+
+    return ""
 
 def planter(species):
     plant = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["plantationMonths", "soilType"], "species", "=", species)
@@ -72,16 +76,25 @@ def anecdote(species):
     plant = db_dealer.get_attributes(db_dealer.PLANT_TABLE, ["ecologicalTips", "history"], "species", "=", species)
     if not plant:
         return f'Je n\'ai aucune anecdote à raconter sur votre {species}...'
-    
-    response = f'Mmh oui j\'ai quelques anecdotes en stock pour votre {species} !'
 
-    if "ecologicalTips" in plant:
-        response += random.choice(plant["ecologicalTips"]["SS"])
-    if "history" in plant:
-        response += random.choice(plant["history"]["SS"])
+    item_history = plant.get("history", None)
+    item_tips = plant.get("ecologicalTips", None)
+
+    history = item_history["S"] if item_history else "NULL"
+    tips = item_tips["S"] if item_tips else "NULL"
+
+    if history == "NULL" and tips == "NULL":
+        return f'Je n\'ai aucune anecdote à raconter sur votre {species}...'
+
+    response = f'Mmh oui j\'ai quelques anecdotes en stock pour votre {species} !\n'
+
+    if tips != "NULL":
+        response += plant["ecologicalTips"]["S"]
+
+    else:
+        response += plant["history"]["S"]
 
     return response
-
 
 def varietes(species):
     return ("Je n'ai pas compris votre question...")

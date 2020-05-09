@@ -75,11 +75,19 @@ class PlantInfoSpider(scrapy.Spider):
         def pest_test() :
             return re.sub('<[^>]+>', '', response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/*[preceding-sibling::h2[contains(text(),\'Maladies, nuisibles et parasites\')]]').extract()[0]).replace('\t','').replace('\n',' ')
 
-        def ecological_test() :
-            return re.sub('<[^>]+>', '', response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/*[preceding-sibling::h2[contains(text(),\'Conseils écologiques\')]]/div[1]').extract()[0]).replace('\t','').replace('\n',' ')
+        def ecological_test():
+            default = ""
+            if "Conseils écologiques" in response.xpath('//*[@id="fiches_plantes"]//h2/text()').extract():
+                return re.sub('<[^>]+>', '', response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/*[preceding-sibling::h2[contains(text(),\'Conseils écologiques\')]]/div[1]').extract()[0]).replace('\t','').replace('\n',' ')
+            else:
+                return default
 
-        def history_test() :
-            return re.sub('<[^>]+>', '', response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/*[preceding-sibling::h2[contains(text(),\'Un peu\')]]').extract()[0]).replace('\t','').replace('\n',' ')
+        def history_test():
+            default = ""
+            if "Un peu d'histoire" in response.xpath('//*[@id="fiches_plantes"]//h2/text()').extract():
+                return re.sub('<[^>]+>', '', response.xpath('//*[@id="fiches_plantes"]/div[2]/div[2]/div[10]/*[preceding-sibling::h2[contains(text(),\'Un peu\')]]').extract()[0]).replace('\t','').replace('\n',' ')
+            else:
+                return default
 
         yield {
             'species' : response.xpath('//*[@id="fiches_plantes"]/h1/text()').get(),
